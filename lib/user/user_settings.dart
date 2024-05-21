@@ -1,23 +1,24 @@
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_menu_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
+import 'package:cinebyte_network_application/user/gallery_page.dart';
+import 'package:cinebyte_network_application/user/user_home_page.dart';
+import 'package:cinebyte_network_application/user/user_menu_page.dart';
+import 'package:cinebyte_network_application/user/user_schedules_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class production_house_settings_page extends StatefulWidget {
-  const production_house_settings_page({super.key});
+class user_settings_page extends StatefulWidget {
+  const user_settings_page({super.key});
 
   @override
-  State<production_house_settings_page> createState() =>
-      _production_house_settings_pageState();
+  State<user_settings_page> createState() => _user_settings_pageState();
 }
 
-class _production_house_settings_pageState
-    extends State<production_house_settings_page> {
-  int bottomnavigation_indexnumber = 3;
+class _user_settings_pageState extends State<user_settings_page> {
+  int bottomnavigation_indexnumber = 4;
 
   get production_house_user_profile_page => null;
 
@@ -31,17 +32,17 @@ class _production_house_settings_pageState
         title: Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Text(
-            'Menu',
+            'Settings',
             style: GoogleFonts.fugazOne(color: Colors.white),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40, top: 15),
-            child: IconButton(
-                onPressed: () {}, icon: Icon(Icons.arrow_back_rounded)),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 40, top: 15),
+        //     child: IconButton(
+        //         onPressed: () {}, icon: Icon(Icons.arrow_back_rounded)),
+        //   ),
+        // ],
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Column(children: [
@@ -63,9 +64,9 @@ class _production_house_settings_pageState
         ),
         Container(
           width: 480,
-          height: 380,
+          height: 350,
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 38, 41, 47),
+            color:  Color.fromARGB(255, 39, 39, 39),
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
@@ -84,6 +85,36 @@ class _production_house_settings_pageState
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => production_house_user_profile_page(),)),
+                  child: Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Color.fromARGB(255, 234, 210, 178),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.person),
+                          title: Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(
+                              'Profile',
+                              style: GoogleFonts.fugazOne(
+                                  color: Color.fromARGB(255, 46, 53, 62),
+                                  fontSize: 18),
+                            ),
+                          ),
+                          trailing: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_circle_right_sharp)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Container(
                   width: width,
                   decoration: BoxDecoration(
@@ -93,29 +124,20 @@ class _production_house_settings_pageState
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              production_house_schedules_page(),
-                        )),
-                        child: Container(
-                          child: ListTile(
-                            leading: Icon(Icons.person),
-                            title: Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Text(
-                                'Profile',
-                                style: GoogleFonts.fugazOne(
-                                    color: Color.fromARGB(255, 46, 53, 62),
-                                    fontSize: 18),
-                              ),
-                            ),
-                            trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.arrow_circle_right_sharp)),
+                      ListTile(
+                        leading: Icon(Icons.help_center),
+                        title: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            'Help Center',
+                            style: GoogleFonts.fugazOne(
+                                color: Color.fromARGB(255, 46, 53, 62),
+                                fontSize: 18),
                           ),
                         ),
+                        trailing: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.arrow_circle_right_sharp)),
                       ),
                     ],
                   ),

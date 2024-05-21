@@ -1,3 +1,4 @@
+import 'package:cinebyte_network_application/user/script_upload_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -138,7 +139,11 @@ class user_script_scripts_page extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const script_upload_page(),
+          ));
+        },
         backgroundColor: Color.fromARGB(255, 234, 210, 178),
         child: Icon(Icons.add),
       ),

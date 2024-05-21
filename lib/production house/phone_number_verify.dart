@@ -1,7 +1,8 @@
+import 'package:cinebyte_network_application/production%20house/register_account.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cinebyte_network_application/production%20house/otp_verification.dart';
+// import 'package:cinebyte_network_application/production%20house/otp_verification.dart';
 
 class phone_number_verify extends StatefulWidget {
   phone_number_verify({super.key});
@@ -13,7 +14,7 @@ class phone_number_verify extends StatefulWidget {
 class _phone_number_verifyState extends State<phone_number_verify> {
   final List user_category = ['Production House', 'Artist'];
   String? values;
-  String? _phone_number;
+  // String? _phone_number;
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -73,33 +74,6 @@ class _phone_number_verifyState extends State<phone_number_verify> {
               SizedBox(
                 height: 50,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 100, right: 100),
-                child: Center(
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Enter a phone number';
-                      }
-                      if (value.length < 9) {
-                        return 'Enter a valid phone number';
-                      }
-                      return null;
-                    },
-                    onSaved: (phone_number) {
-                      _phone_number = phone_number;
-                    },
-                    keyboardType: TextInputType.number,
-                    style: GoogleFonts.fugazOne(
-                        color: Color.fromARGB(255, 255, 255, 255)),
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'Enter your phone number',
-                        hintStyle: TextStyle(
-                            color: const Color.fromARGB(255, 99, 99, 99))),
-                  ),
-                ),
-              ),
               SizedBox(
                 height: 50,
               ),
@@ -107,14 +81,14 @@ class _phone_number_verifyState extends State<phone_number_verify> {
                 onPressed: () {
                   if (_formkey.currentState!.validate()) {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => otp_verification(),
+                      builder: (context) => register_account(),
                     ));
                   } else {
                     null;
                   }
                 },
                 child: Text(
-                  'Send OTP',
+                  'Go',
                   style: GoogleFonts.fugazOne(
                       fontSize: 18, color: Color(0xff2D3037)),
                 ),

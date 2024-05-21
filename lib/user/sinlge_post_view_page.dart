@@ -1,4 +1,3 @@
-import 'dart:js';
 
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';

@@ -87,54 +87,46 @@ gain and saving the planet.''',
                     padding: const EdgeInsets.only(),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 50),
-                      child: Material(
-                        elevation: 10,
-                        borderRadius: BorderRadius.circular(20),
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll(Color(0xff2D3037)),
-                                minimumSize: MaterialStatePropertyAll(
-                                  Size(200, 50),
-                                )),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      create_schedules_page()));
-                            },
-                            child: Text(
-                              "Approve",
-                              style: GoogleFonts.fugazOne(
-                                  color: Colors.white, fontSize: 14),
-                            )),
-                      ),
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Color(0xff2D3037)),
+                              minimumSize: MaterialStatePropertyAll(
+                                Size(200, 50),
+                              )),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    create_schedules_page()));
+                          },
+                          child: Text(
+                            "Approve",
+                            style: GoogleFonts.fugazOne(
+                                color: Colors.white, fontSize: 14),
+                          )),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 30),
-                      child: Material(
-                        elevation: 10,
-                        borderRadius: BorderRadius.circular(20),
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll(Color(0xff2D3037)),
-                                minimumSize: MaterialStatePropertyAll(
-                                  Size(200, 50),
-                                )),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      production_house_scripts_page()));
-                            },
-                            child: Text(
-                              "Reject",
-                              style: GoogleFonts.fugazOne(
-                                  color: Colors.white, fontSize: 14),
-                            )),
-                      ),
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Color(0xff2D3037)),
+                              minimumSize: MaterialStatePropertyAll(
+                                Size(200, 50),
+                              )),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    production_house_scripts_page()));
+                          },
+                          child: Text(
+                            "Reject",
+                            style: GoogleFonts.fugazOne(
+                                color: Colors.white, fontSize: 14),
+                          )),
                     ),
                   ),
                 ],

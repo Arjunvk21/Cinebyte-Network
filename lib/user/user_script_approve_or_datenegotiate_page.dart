@@ -1,3 +1,4 @@
+import 'package:cinebyte_network_application/user/user_date_negotiate_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -98,8 +99,8 @@ gain and saving the planet.''',
                                           Size(200, 50),
                                         )),
                                     onPressed: () {
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //     builder: (context) => register_account()));
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => user_date_negotiate_page()));
                                     },
                                     child: Text(
                                       "Approve",

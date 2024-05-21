@@ -1,29 +1,43 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cinebyte_network_application/util/appcustomattributes.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cinebyte_network_application/production%20house/get_started_page.dart';
+import 'package:cinebyte_network_application/production%20house/production_house_feedback_page.dart';
+import 'package:cinebyte_network_application/production%20house/production_house_user_profile.dart';
+import 'package:cinebyte_network_application/production%20house/sign_in.dart';
+import 'package:cinebyte_network_application/user/gallery_page.dart';
+import 'package:cinebyte_network_application/user/notifications_page.dart';
+import 'package:cinebyte_network_application/user/skill_upload_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: camel_case_types
 class user_home_page extends StatefulWidget {
   const user_home_page({super.key});
 
   @override
-  State<user_home_page> createState() => _production_house_home_pageState();
+  State<user_home_page> createState() => user_home_pageState();
 }
 
-class _production_house_home_pageState extends State<user_home_page> {
-  int bottomnavigation_indexnumber = 0;
+final _firstor = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
 
+Stream? userStream;
+
+getOnLoad() {}
+
+class user_home_pageState extends State<user_home_page> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width * 0.8;
-
+    String id = _auth.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff2D3037),
+        backgroundColor: const Color.fromARGB(255, 33, 33, 33),
         title: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(left: 20, top: 20),
           child: Text(
             'Home',
             style: GoogleFonts.fugazOne(color: Colors.white),
@@ -31,130 +45,139 @@ class _production_house_home_pageState extends State<user_home_page> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(top: 15),
+            padding: const EdgeInsets.only(right: 20, top: 15),
             child: IconButton(
-                onPressed: () {}, icon: Icon(Icons.add_location_alt_sharp)),
+                onPressed: () {},
+                icon: const Icon(Icons.add_location_alt_sharp)),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child:
-                IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
+            padding: const EdgeInsets.only(right: 20, top: 15),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const notifications_page(),
+                  ));
+                },
+                icon: const Icon(Icons.notifications)),
           )
         ],
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 0),
-              child: Container(
-                margin: EdgeInsets.only(top: 40),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Color.fromARGB(255, 234, 210, 178),
-                ),
-                width: width,
-                height: 170,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(left: 10, bottom: 20),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: NetworkImage(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPzVgo3yqoEmk3EEo2WPIDK7W5n4Mk_vinDYtsDKmfGg&s'),
-                          )),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+            const SizedBox(
+              height: 40,
+            ),
+            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: _firstor.collection('Users').doc(id).snapshots(),
+              builder: (context, snapshot) {
+                DocumentSnapshot data = snapshot.data!;
+
+                return Padding(
+                  padding: const EdgeInsets.only(left: 0),
+                  child: Container(
+                    margin: const EdgeInsets.only(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: const Color.fromARGB(255, 234, 210, 178),
+                    ),
+                    width: width,
+                    height: 170,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 20),
-                            child: Text(
-                              'Prithviraj productions',
-                              style: GoogleFonts.acme(fontSize: 20),
-                            ),
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 20),
+                              child: CircleAvatar(
+                                radius: 40,
+                                backgroundImage:
+                                    NetworkImage('${data['image']}'),
+                              )),
+                          const SizedBox(
+                            width: 20,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              'prithvirajproduction@gmail.com',
-                              style: GoogleFonts.acme(fontSize: 12),
-                            ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${data['name']}",
+                                style: GoogleFonts.acme(
+                                    fontSize: 20,
+                                    color:
+                                        const Color.fromARGB(255, 33, 33, 33)),
+                              ),
+                              Text(
+                                '${data['email']}',
+                                style: GoogleFonts.acme(fontSize: 15),
+                              ),
+                              Text(
+                                'Skill : ${data['skill']}',
+                                style: GoogleFonts.acme(fontSize: 15),
+                              ),
+                              Text(
+                                'Experience : ${data['experience']}',
+                                style: GoogleFonts.acme(fontSize: 15),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 150),
+                                child: IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) => skill_upload(),
+                                      ));
+                                    },
+                                    icon: const Icon(
+                                      Icons.add_card_rounded,
+                                      color: Color.fromARGB(255, 33, 33, 33),
+                                    )),
+                              )
+                            ],
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, right: 130),
-                            child: Text(
-                              'Actor',
-                              style: GoogleFonts.acme(fontSize: 12),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, right: 105),
-                            child: Text(
-                              'Experience',
-                              style: GoogleFonts.acme(fontSize: 12),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              right: 70,
-                            ),
-                            child: Text(
-                              '+91 9454737782',
-                              style: GoogleFonts.acme(fontSize: 12),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 150),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.add_card_rounded)),
-                          )
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             CarouselSlider(
                 items: [
                   Container(
-                    margin: EdgeInsets.all(8),
+                    margin: const EdgeInsets.all(8),
                     height: 150,
                     decoration: BoxDecoration(
                         color: Colors.amber[200],
-                        image: DecorationImage(
+                        image: const DecorationImage(
                             image: NetworkImage(
                                 'https://imagesvs.oneindia.com/webp/img/2024/02/bramayugam-small-1707971334.jpg'),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   Container(
-                    margin: EdgeInsets.all(8),
+                    margin: const EdgeInsets.all(8),
                     height: 150,
                     decoration: BoxDecoration(
                         color: Colors.amber[200],
-                        image: DecorationImage(
+                        image: const DecorationImage(
                             image: NetworkImage(
                                 'https://indiaglitz-media.s3.amazonaws.com/telugu/home/the-goat-life-review-1.jpg'),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   Container(
-                    margin: EdgeInsets.all(8),
+                    margin: const EdgeInsets.all(8),
                     height: 150,
                     decoration: BoxDecoration(
                         color: Colors.amber[200],
-                        image: DecorationImage(
+                        image: const DecorationImage(
                             image: NetworkImage(
                                 'https://static.toiimg.com/thumb/msid-107578203,width-1280,height-720,resizemode-4/107578203.jpg'),
                             fit: BoxFit.cover),
@@ -166,172 +189,210 @@ class _production_house_home_pageState extends State<user_home_page> {
                   aspectRatio: 16 / 9,
                   enableInfiniteScroll: true,
                   autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 3),
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayInterval: const Duration(seconds: 3),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
                   enlargeCenterPage: true,
                   enlargeFactor: 0.8,
                 )),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            Container(
-              height: 220,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
+            const SizedBox(
+              height: 30,
+            ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          const production_house_user_profile_page(),
+                    )),
+                    child: Container(
                       width: width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        color: Color.fromARGB(255, 234, 210, 178),
+                        color: const Color.fromARGB(255, 234, 210, 178),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.person),
+                            leading: const Icon(
+                              Icons.person,
+                              color: Color.fromARGB(255, 33, 33, 33),
+                            ),
                             title: Padding(
                               padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 'Profile',
                                 style: GoogleFonts.fugazOne(
-                                    color: Color.fromARGB(255, 46, 53, 62),
+                                    color:
+                                        const Color.fromARGB(255, 33, 33, 33),
                                     fontSize: 18),
                               ),
                             ),
                             trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.arrow_circle_right_sharp)),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const production_house_user_profile_page(),
+                                  ));
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_forward_outlined,
+                                  color: Color.fromARGB(255, 33, 33, 33),
+                                )),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const gallery_page(),
+                    )),
+                    child: Container(
                       width: width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        color: Color.fromARGB(255, 234, 210, 178),
+                        color: const Color.fromARGB(255, 234, 210, 178),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.storage),
+                            leading: const Icon(
+                              Icons.storage,
+                              color: Color.fromARGB(255, 33, 33, 33),
+                            ),
                             title: Padding(
                               padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 'Gallery',
                                 style: GoogleFonts.fugazOne(
-                                    color: Color.fromARGB(255, 46, 53, 62),
+                                    color:
+                                        const Color.fromARGB(255, 33, 33, 33),
                                     fontSize: 18),
                               ),
                             ),
                             trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.arrow_circle_right_sharp)),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const gallery_page(),
+                                  ));
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_forward_outlined,
+                                  color: Color.fromARGB(255, 33, 33, 33),
+                                )),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          const production_house_feedback_page(),
+                    )),
+                    child: Container(
                       width: width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        color: Color.fromARGB(255, 234, 210, 178),
+                        color: const Color.fromARGB(255, 234, 210, 178),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.feedback),
+                            leading: const Icon(
+                              Icons.feedback,
+                              color: Color.fromARGB(255, 33, 33, 33),
+                            ),
                             title: Padding(
                               padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 'Feedback',
                                 style: GoogleFonts.fugazOne(
-                                    color: Color.fromARGB(255, 46, 53, 62),
+                                    color:
+                                        const Color.fromARGB(255, 33, 33, 33),
                                     fontSize: 18),
                               ),
                             ),
                             trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.arrow_circle_right_sharp)),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const production_house_feedback_page(),
+                                  ));
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_forward_outlined,
+                                  color: Color.fromARGB(255, 33, 33, 33),
+                                )),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const get_started_page(),
+                    )),
+                    child: Container(
                       width: width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        color: Color.fromARGB(255, 234, 210, 178),
+                        color: const Color.fromARGB(255, 234, 210, 178),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ListTile(
-                            leading: Icon(Icons.logout),
+                            leading: const Icon(
+                              Icons.logout,
+                              color: Color.fromARGB(255, 33, 33, 33),
+                            ),
                             title: Padding(
                               padding: const EdgeInsets.only(left: 20),
                               child: Text(
                                 'logout',
                                 style: GoogleFonts.fugazOne(
-                                    color: Color.fromARGB(255, 46, 53, 62),
+                                    color:
+                                        const Color.fromARGB(255, 33, 33, 33),
                                     fontSize: 18),
                               ),
                             ),
                             trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.arrow_circle_right_sharp)),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Sign_in_page(),
+                                  ));
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_forward_outlined,
+                                  color: Color.fromARGB(255, 33, 33, 33),
+                                )),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
               ),
             )
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 10,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'home',
-              backgroundColor: Color(0xff36393F)),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.menu),
-              label: 'Menu',
-              backgroundColor: Color(0xff36393F)),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.event_note),
-              label: 'Schedules',
-              backgroundColor: Color(0xff36393F)),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-              backgroundColor: Color(0xff36393F)),
-        ],
-        currentIndex: bottomnavigation_indexnumber,
-        onTap: (int index) {
-          setState(() {
-            bottomnavigation_indexnumber = index;
-          });
-        },
       ),
     );
   }

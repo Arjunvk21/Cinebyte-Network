@@ -38,7 +38,9 @@ class user_shootings_page extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          
+        },
         backgroundColor: Color.fromARGB(255, 234, 210, 178),
         child: Icon(Icons.add),
       ),

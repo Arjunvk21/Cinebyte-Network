@@ -1,6 +1,7 @@
 import 'package:cinebyte_network_application/firebase/firestore.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/production%20house/sign_in.dart';
+import 'package:cinebyte_network_application/user/bottomnav.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,7 +34,7 @@ class _register_accountState extends State<register_account> {
       Map<String, dynamic> registereduserinfomap, String userid) async {
     try {
       await FirebaseFirestore.instance
-          .collection('User Registration')
+          .collection('Users')
           .doc(userid)
           .set(registereduserinfomap);
     } catch (e) {
@@ -57,7 +58,7 @@ class _register_accountState extends State<register_account> {
             // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
-              builder: (context) => const production_house_home_page(),
+              builder: (context) => const custombottomnavigationbar(),
             ));
         setState(() {
           isloading = false;
@@ -69,13 +70,16 @@ class _register_accountState extends State<register_account> {
         //   "password": _passwordcontroller.text,
         //   "id": registered_user_id,
         // };
-        String registeredUserId = randomString(10);
+        String registeredUserId = FirebaseAuth.instance.currentUser!.uid;
 
         Map<String, dynamic> registeredUserInfoMap = {
           "name": usernamecontroller.text,
           'email': _emailcontroller.text,
           "password": _passwordcontroller.text,
           "id": registeredUserId,
+          "image": '',
+          "skill": '',
+          "experience": '',
         };
         await addfirebase(registeredUserInfoMap, registeredUserId);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -142,202 +146,218 @@ class _register_accountState extends State<register_account> {
     double width = MediaQuery.of(context).size.width * 0.5;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 33, 33, 33),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10, left: 60, right: 60),
         child: Center(
           child: Form(
               key: _formkey,
-              child: Column(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(50),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
                       child: Text('Register Here',
                           style: App_custom_heading_textStyle.style),
                     ),
-                  ),
-                  TextFormField(
-                    controller: usernamecontroller,
-                    style: GoogleFonts.fugazOne(color: maintextcolor),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a valid username';
-                      }
-                      return null;
-                    },
-                    // onSaved: (name) {
-                    //   _name = name;
-                    // },
-                    decoration: InputDecoration(
-                        label: Text(
-                          'Username',
-                          style: GoogleFonts.fugazOne(
-                              color: const Color.fromARGB(142, 158, 158, 158)),
-                        ),
-                        prefixIcon: const Icon(Icons.account_circle_rounded,
-                            color: Color.fromARGB(142, 158, 158, 158))),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    style: GoogleFonts.fugazOne(color: maintextcolor),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: _validateemail,
-                    controller: _emailcontroller,
-                    // onSaved: (email) {
-                    //   _emailcontroller = email;
-                    // },
-                    decoration: InputDecoration(
-                        label: Text(
-                          'Email',
-                          style: GoogleFonts.fugazOne(
-                              color: const Color.fromARGB(142, 158, 158, 158)),
-                        ),
-                        prefixIcon: const Icon(Icons.email_rounded,
-                            color: Color.fromARGB(142, 158, 158, 158))),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    style: GoogleFonts.fugazOne(color: maintextcolor),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: _validate_password,
-                    onSaved: (password) {
-                      _passwordcontroller = password as TextEditingController;
-                    },
-                    controller: _passwordcontroller,
-                    obscureText: _issecurepassword,
-                    decoration: InputDecoration(
-                        label: Text(
-                          'Password',
-                          style: GoogleFonts.fugazOne(
-                              color: const Color.fromARGB(142, 158, 158, 158)),
-                        ),
-                        prefixIcon: const Icon(Icons.lock_rounded,
-                            color: Color.fromARGB(142, 158, 158, 158)),
-                        suffixIcon: togglepassword()),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    style: GoogleFonts.fugazOne(color: maintextcolor),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: _validate_confirm_password,
-                    controller: _confirmpassword,
-                    obscureText: _issecurepassword,
-                    decoration: InputDecoration(
-                        label: Text(
-                          'Confirm Password',
-                          style: GoogleFonts.fugazOne(
-                              color: const Color.fromARGB(142, 158, 158, 158)),
-                        ),
-                        prefixIcon: const Icon(Icons.lock_rounded,
-                            color: Color.fromARGB(142, 158, 158, 158)),
-                        suffixIcon: togglepassword()),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        'Already have an account?',
-                        style: GoogleFonts.fugazOne(
-                            color: Colors.white, fontSize: 12),
-                      ),
-                      const SizedBox(width: 80),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Sign_in_page(),
-                            ));
-                          },
-                          child: Text(
-                            'Login here',
-                            style: GoogleFonts.fugazOne(
-                                color: maintextcolor, fontSize: 20),
-                          ))
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(maintextcolor),
-                              minimumSize: MaterialStatePropertyAll(
-                                Size(width, 50),
-                              )),
-                          onPressed: () async {
-                            setState(() {
-                              isloading = true;
-                            });
-                            if (_formkey.currentState!.validate()) {
-                              setState(() {
-                                email = _emailcontroller.text;
-                                password = _passwordcontroller.text;
-                              });
-                              await registration();
-                              setState(() {
-                                isloading = false;
-                              });
-                            }
-                          },
-                          child: isloading
-                              ? const Center(child: CircularProgressIndicator())
-                              : Text(
-                                  "Register",
-                                  style: GoogleFonts.fugazOne(
-                                      color:
-                                          const Color.fromARGB(255, 46, 53, 62),
-                                      fontSize: 18),
-                                )),
+                    SizedBox(
+                      height: 25,
                     ),
-                  ),
-
-                  //   ClipRRect(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //     child: Stack(
-                  //       children: [
-                  //         Positioned.fill(
-                  //             child: Container(
-                  //           decoration: BoxDecoration(
-                  //               gradient: LinearGradient(colors: [Color(0xffE7B588),
-                  //               Color(0xffE5C8AE),
-                  //               Color(0xffFFEFE1)])),
-                  //         )),
-                  //         ElevatedButton(onPressed: (){}, child: Text('Register',style: GoogleFonts.fugazOne(color:const Color.fromARGB(255, 57, 61, 68)),))
-                  //       ],
-                  //     ),
-                  //   )
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                      child: Padding(
-                    padding: const EdgeInsets.only(),
-                    child: Text('Or login with',
-                        style: GoogleFonts.fugazOne(color: Colors.white)),
-                  )),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    TextFormField(
+                      controller: usernamecontroller,
+                      style: GoogleFonts.fugazOne(color: maintextcolor),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter a valid username';
+                        }
+                        return null;
+                      },
+                      // onSaved: (name) {
+                      //   _name = name;
+                      // },
+                      decoration: InputDecoration(
+                          label: Text(
+                            'Username',
+                            style: GoogleFonts.fugazOne(
+                                color:
+                                    const Color.fromARGB(142, 158, 158, 158)),
+                          ),
+                          prefixIcon: const Icon(Icons.account_circle_rounded,
+                              color: Color.fromARGB(142, 158, 158, 158))),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    TextFormField(
+                      style: GoogleFonts.fugazOne(color: maintextcolor),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: _validateemail,
+                      controller: _emailcontroller,
+                      // onSaved: (email) {
+                      //   _emailcontroller = email;
+                      // },
+                      decoration: InputDecoration(
+                          label: Text(
+                            'Email',
+                            style: GoogleFonts.fugazOne(
+                                color:
+                                    const Color.fromARGB(142, 158, 158, 158)),
+                          ),
+                          prefixIcon: const Icon(Icons.email_rounded,
+                              color: Color.fromARGB(142, 158, 158, 158))),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      style: GoogleFonts.fugazOne(color: maintextcolor),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: _validate_password,
+                      onSaved: (password) {
+                        _passwordcontroller = password as TextEditingController;
+                      },
+                      controller: _passwordcontroller,
+                      obscureText: _issecurepassword,
+                      decoration: InputDecoration(
+                          label: Text(
+                            'Password',
+                            style: GoogleFonts.fugazOne(
+                                color:
+                                    const Color.fromARGB(142, 158, 158, 158)),
+                          ),
+                          prefixIcon: const Icon(Icons.lock_rounded,
+                              color: Color.fromARGB(142, 158, 158, 158)),
+                          suffixIcon: togglepassword()),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    TextFormField(
+                      style: GoogleFonts.fugazOne(color: maintextcolor),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: _validate_confirm_password,
+                      controller: _confirmpassword,
+                      obscureText: _issecurepassword,
+                      decoration: InputDecoration(
+                          label: Text(
+                            'Confirm Password',
+                            style: GoogleFonts.fugazOne(
+                                color:
+                                    const Color.fromARGB(142, 158, 158, 158)),
+                          ),
+                          prefixIcon: const Icon(Icons.lock_rounded,
+                              color: Color.fromARGB(142, 158, 158, 158)),
+                          suffixIcon: togglepassword()),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Row(
                       children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.mail,
-                              color: Colors.white,
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.facebook_rounded,
-                              color: Colors.white,
-                            )),
+                        Text(
+                          'Already have an account?',
+                          style: GoogleFonts.fugazOne(
+                              color: Colors.white, fontSize: 12),
+                        ),
+                        // const SizedBox(width: 10),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Sign_in_page(),
+                              ));
+                            },
+                            child: Text(
+                              'Login here',
+                              style: GoogleFonts.fugazOne(
+                                  color: maintextcolor, fontSize: 17),
+                            ))
                       ],
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 25,
+                    ),
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(maintextcolor),
+                            minimumSize: MaterialStatePropertyAll(
+                              Size(width, 50),
+                            )),
+                        onPressed: () async {
+                          setState(() {
+                            isloading = true;
+                          });
+                          if (_formkey.currentState!.validate()) {
+                            setState(() {
+                              email = _emailcontroller.text;
+                              password = _passwordcontroller.text;
+                            });
+                            await registration();
+                            setState(() {
+                              isloading = false;
+                            });
+                          }
+                        },
+                        child: isloading
+                            ? const Center(child: CircularProgressIndicator())
+                            : Text(
+                                "Register",
+                                style: GoogleFonts.fugazOne(
+                                    color:
+                                        const Color.fromARGB(255, 46, 53, 62),
+                                    fontSize: 18),
+                              )),
+
+                    //   ClipRRect(
+                    //     borderRadius: BorderRadius.circular(10),
+                    //     child: Stack(
+                    //       children: [
+                    //         Positioned.fill(
+                    //             child: Container(
+                    //           decoration: BoxDecoration(
+                    //               gradient: LinearGradient(colors: [Color(0xffE7B588),
+                    //               Color(0xffE5C8AE),
+                    //               Color(0xffFFEFE1)])),
+                    //         )),
+                    //         ElevatedButton(onPressed: (){}, child: Text('Register',style: GoogleFonts.fugazOne(color:const Color.fromARGB(255, 57, 61, 68)),))
+                    //       ],
+                    //     ),
+                    //   )
+                    // SizedBox(
+                    //   height: 25,
+                    // ),
+                    // Center(
+                    //     child: Text('Or login with',
+                    //         style: GoogleFonts.fugazOne(color: Colors.white))),
+                    // SizedBox(
+                    //   height: 25,
+                    // ),
+                    // Center(
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    //       IconButton(
+                    //           onPressed: () {},
+                    //           icon: const Icon(
+                    //             Icons.mail,
+                    //             color: Colors.white,
+                    //           )),
+                    //       IconButton(
+                    //           onPressed: () {},
+                    //           icon: const Icon(
+                    //             Icons.facebook_rounded,
+                    //             color: Colors.white,
+                    //           )),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
               )),
         ),
       ),

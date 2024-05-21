@@ -15,8 +15,10 @@ class production_house_schedules_page extends StatefulWidget {
       _production_house_schedules_pageState();
 }
 
+// ignore: camel_case_types
 class _production_house_schedules_pageState
     extends State<production_house_schedules_page> {
+        // ignore: non_constant_identifier_names
         int bottomnavigation_indexnumber = 2;
 
   @override
@@ -28,7 +30,7 @@ class _production_house_schedules_pageState
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xff2D3037),
+          backgroundColor: const Color.fromARGB(255, 33, 33, 33),
           title: Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Text(
@@ -54,7 +56,7 @@ class _production_house_schedules_pageState
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    color: Color(0xff51555D),
+                   color: const Color.fromARGB(255, 33, 33, 33),
                     
                   ),
                   child: const TabBar(
@@ -64,7 +66,7 @@ class _production_house_schedules_pageState
                       indicator: BoxDecoration(
                           color: Color.fromARGB(255, 234, 210, 178),
                           borderRadius: BorderRadius.all(Radius.circular(30))),
-                      labelColor: Color(0xff2D3037),
+                      labelColor:  Color.fromARGB(255, 33, 33, 33),
                       unselectedLabelColor: Color.fromARGB(255, 195, 192, 192),
                       tabs: [
                         App_custom_tabbar(title: 'Scripts'),
@@ -87,7 +89,7 @@ class _production_house_schedules_pageState
                       )),
                   child: Icon(Icons.home)),
               label: 'home',
-              backgroundColor: Color(0xff36393F)),
+              backgroundColor: const Color.fromARGB(255, 33, 33, 33),),
           BottomNavigationBarItem(
               icon: GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -95,7 +97,7 @@ class _production_house_schedules_pageState
                       )),
                   child: Icon(Icons.menu)),
               label: 'Menu',
-              backgroundColor: Color(0xff36393F)),
+             backgroundColor: const Color.fromARGB(255, 33, 33, 33),),
           BottomNavigationBarItem(
               icon: GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -103,7 +105,7 @@ class _production_house_schedules_pageState
                       )),
                   child: Icon(Icons.event_note)),
               label: 'Schedules',
-              backgroundColor: Color(0xff36393F)),
+              backgroundColor: const Color.fromARGB(255, 33, 33, 33),),
           BottomNavigationBarItem(
               icon: GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -111,7 +113,7 @@ class _production_house_schedules_pageState
                       )),
                   child: Icon(Icons.settings)),
               label: 'Settings',
-              backgroundColor: Color(0xff36393F)),
+              backgroundColor: const Color.fromARGB(255, 33, 33, 33),),
         ],
         currentIndex: bottomnavigation_indexnumber,
         onTap: (int index) {

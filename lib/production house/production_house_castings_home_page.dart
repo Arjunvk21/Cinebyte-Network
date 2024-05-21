@@ -17,32 +17,7 @@ class casting_home_page extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.only(),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(20),
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(
-                            Color.fromARGB(255, 229, 206, 177)),
-                        minimumSize: MaterialStatePropertyAll(
-                          Size(200, 40),
-                        )),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => create_casting_calls()));
-                    },
-                    child: Text(
-                      "Create",
-                      style: GoogleFonts.fugazOne(
-                          color: Color.fromARGB(255, 46, 53, 62), fontSize: 14),
-                    )),
-              ),
-            ),
-          ),
+          
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +48,12 @@ class casting_home_page extends StatelessWidget {
             ),
           ),
         ],
+      ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Color.fromARGB(255, 234, 210, 178),
+        child: Icon(Icons.add),
       ),
     );
   }

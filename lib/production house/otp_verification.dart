@@ -3,7 +3,6 @@ import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class otp_verification extends StatefulWidget {

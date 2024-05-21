@@ -5,6 +5,7 @@ import 'package:cinebyte_network_application/production%20house/production_house
 import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_settings_page.dart';
 import 'package:cinebyte_network_application/production%20house/rental_services_home_page.dart';
+import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,11 +24,10 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff2D3037),
+        backgroundColor: const Color.fromARGB(255, 33, 33, 33),
         title: Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Text(
@@ -49,7 +49,7 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
           Padding(
             padding: const EdgeInsets.all(60),
             child: TextFormField(
-              style: TextStyle(color: Colors.white),
+              style: GoogleFonts.fugazOne(color: Colors.white),
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search, color: Colors.white),
                   contentPadding:
@@ -63,7 +63,7 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 0),
@@ -72,7 +72,6 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
                     builder: (context) => production_house_scripts_page(),
                   )),
                   child: Container(
-                    margin: EdgeInsets.all(70),
                     height: 130,
                     width: 150,
                     decoration: BoxDecoration(
@@ -151,17 +150,20 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
               ),
             ],
           ),
+          SizedBox(
+            height: 30,
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => casting_home_page(),
                 )),
                 child: Container(
-                  margin: EdgeInsets.only(
-                    left: 70,
-                  ),
+                  // margin: EdgeInsets.only(
+                  //   left: 70,
+                  // ),
                   // margin: EdgeInsets.all(60),
                   height: 130,
                   width: 150,
@@ -200,9 +202,9 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
                   builder: (context) => rental_services_home_page(),
                 )),
                 child: Container(
-                  margin: EdgeInsets.only(
-                    left: 70,
-                  ),
+                  // margin: EdgeInsets.only(
+                  //   left: 70,
+                  // ),
                   // margin: EdgeInsets.all(60),
                   height: 130,
                   width: 150,
@@ -250,7 +252,7 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
                       )),
                   child: Icon(Icons.home)),
               label: 'home',
-              backgroundColor: Color(0xff36393F)),
+              backgroundColor: Color.fromARGB(255, 16, 16, 16)),
           BottomNavigationBarItem(
               icon: GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -258,7 +260,7 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
                       )),
                   child: Icon(Icons.menu)),
               label: 'Menu',
-              backgroundColor: Color(0xff36393F)),
+              backgroundColor: Color.fromARGB(255, 16, 16, 16)),
           BottomNavigationBarItem(
               icon: GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -266,7 +268,7 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
                       )),
                   child: Icon(Icons.event_note)),
               label: 'Schedules',
-              backgroundColor: Color(0xff36393F)),
+              backgroundColor: Color.fromARGB(255, 16, 16, 16)),
           BottomNavigationBarItem(
               icon: GestureDetector(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -274,7 +276,7 @@ class _production_page_menu_pageState extends State<production_page_menu_page> {
                       )),
                   child: Icon(Icons.settings)),
               label: 'Settings',
-              backgroundColor: Color(0xff36393F)),
+             backgroundColor: Color.fromARGB(255, 16, 16, 16)),
         ],
         currentIndex: bottomnavigation_indexnumber,
         onTap: (int index) {

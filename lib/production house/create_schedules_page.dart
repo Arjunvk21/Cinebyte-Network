@@ -15,6 +15,22 @@ class _create_schedules_pageState extends State<create_schedules_page> {
   Widget build(BuildContext context) {
     DateTime _datetime = DateTime.now();
     TimeOfDay _selectedtime = TimeOfDay.now();
+    bool _button1Enabled = true;
+    bool _button2Enabled = true;
+
+    void _onButton1Pressed() {
+      setState(() {
+        _button1Enabled = false;
+        _button2Enabled = true;
+      });
+    }
+
+    void _onButton2Pressed() {
+      setState(() {
+        _button1Enabled = true;
+        _button2Enabled = false;
+      });
+    }
 
     void _showdatepicker() {
       showDatePicker(
@@ -26,11 +42,11 @@ class _create_schedules_pageState extends State<create_schedules_page> {
               }));
     }
 
-    List<bool> isSelected = [false, false];
+    // List<bool> isSelected = [false, false];
     double width = MediaQuery.of(context).size.width * 0.9;
     double height = MediaQuery.of(context).size.height * 0.8;
     return Scaffold(
-      appBar: Custom_appbar_real(title: 'Create schedules'),
+      appBar: const Custom_appbar_real(title: 'Create schedules'),
       body: Column(
         children: [
           Row(
@@ -48,10 +64,10 @@ class _create_schedules_pageState extends State<create_schedules_page> {
           ),
           Center(
             child: Container(
-              margin: EdgeInsets.only(top: 10),
+              margin: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: Color.fromARGB(255, 34, 37, 45),
+                color: const Color.fromARGB(255, 34, 37, 45),
               ),
               width: width,
               height: height,
@@ -69,10 +85,10 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                           'Description',
                           style: GoogleFonts.fugazOne(),
                         ),
-                        prefixIcon: Icon(Icons.description),
+                        prefixIcon: const Icon(Icons.description),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 60,
                     ),
                     Row(
@@ -85,19 +101,19 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                 color: Colors.white, fontSize: 15),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 120,
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(),
+                    const Padding(
+                      padding: EdgeInsets.only(),
                       child: Divider(
                         thickness: 1,
                         color: Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
@@ -113,7 +129,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                     onPressed: () {
                                       _showdatepicker();
                                     },
-                                    icon: Icon(Icons.calendar_month)),
+                                    icon: const Icon(Icons.calendar_month)),
                                 suffixIconColor:
                                     const Color.fromARGB(255, 161, 160, 160),
                                 hintStyle: GoogleFonts.fugazOne(
@@ -121,7 +137,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                         255, 161, 160, 160))),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         Container(
@@ -144,7 +160,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                         });
                                       }
                                     },
-                                    icon: Icon(Icons.schedule)),
+                                    icon: const Icon(Icons.schedule)),
                                 suffixIconColor:
                                     const Color.fromARGB(255, 161, 160, 160),
                                 hintStyle: GoogleFonts.fugazOne(
@@ -167,7 +183,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                     onPressed: () {
                                       _showdatepicker();
                                     },
-                                    icon: Icon(Icons.calendar_month)),
+                                    icon: const Icon(Icons.calendar_month)),
                                 suffixIconColor:
                                     const Color.fromARGB(255, 161, 160, 160),
                                 hintStyle: GoogleFonts.fugazOne(
@@ -175,7 +191,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                         255, 161, 160, 160))),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         Container(
@@ -198,7 +214,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                         });
                                       }
                                     },
-                                    icon: Icon(Icons.schedule)),
+                                    icon: const Icon(Icons.schedule)),
                                 suffixIconColor:
                                     const Color.fromARGB(255, 161, 160, 160),
                                 hintStyle: GoogleFonts.fugazOne(
@@ -221,7 +237,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                     onPressed: () {
                                       _showdatepicker();
                                     },
-                                    icon: Icon(Icons.calendar_month)),
+                                    icon: const Icon(Icons.calendar_month)),
                                 // suffixIcon: Icon(Icons.calendar_month),
                                 suffixIconColor:
                                     const Color.fromARGB(255, 161, 160, 160),
@@ -230,7 +246,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                         255, 161, 160, 160))),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         Container(
@@ -253,7 +269,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                                         });
                                       }
                                     },
-                                    icon: Icon(Icons.schedule)),
+                                    icon: const Icon(Icons.schedule)),
                                 suffixIconColor:
                                     const Color.fromARGB(255, 161, 160, 160),
                                 hintStyle: GoogleFonts.fugazOne(
@@ -263,57 +279,55 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Text(
                       'Meeting type',
                       style: GoogleFonts.fugazOne(color: Colors.white),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                            style: ButtonStyle(
+                            style: const ButtonStyle(
                                 backgroundColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(255, 220, 206, 143)),
+                                  Color.fromARGB(255, 234, 210, 178),
+                                ),
                                 minimumSize: MaterialStatePropertyAll(
                                   Size(30, 40),
                                 )),
-                            onPressed: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => register_account()));
-                            },
+                            onPressed:
+                                _button1Enabled ? _onButton1Pressed : null,
                             child: Text(
                               "Virtual Room",
                               style: GoogleFonts.fugazOne(
-                                  color: Color.fromARGB(255, 46, 53, 62),
+                                  color: const Color.fromARGB(255, 46, 53, 62),
                                   fontSize: 12),
                             )),
-                        SizedBox(
+                        const SizedBox(
                           width: 40,
                         ),
                         ElevatedButton(
-                            style: ButtonStyle(
+                            style: const ButtonStyle(
                                 minimumSize: MaterialStatePropertyAll(
+                                  
                               Size(30, 40),
-                            )),
-                            onPressed: () {
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => register_account()));
-                            },
+                            ),backgroundColor: MaterialStatePropertyAll( Color.fromARGB(255, 234, 210, 178),)),
+                            onPressed:
+                                _button2Enabled ? _onButton2Pressed : null,
                             child: Text(
                               "Physical Room",
                               style: GoogleFonts.fugazOne(
-                                  color: Color.fromARGB(255, 46, 53, 62),
+                                  color: const Color.fromARGB(255, 46, 53, 62),
                                   fontSize: 12),
                             )),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -321,20 +335,22 @@ class _create_schedules_pageState extends State<create_schedules_page> {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: ElevatedButton(
-                            style: ButtonStyle(
+                            style: const ButtonStyle(
                                 backgroundColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(255, 220, 206, 143)),
+                                  Color.fromARGB(255, 234, 210, 178),
+                                ),
                                 minimumSize: MaterialStatePropertyAll(
                                   Size(200, 40),
                                 )),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => meeting_scheduled()));
+                                  builder: (context) =>
+                                      const meeting_scheduled()));
                             },
                             child: Text(
                               "Schedule",
                               style: GoogleFonts.fugazOne(
-                                  color: Color.fromARGB(255, 46, 53, 62),
+                                  color: const Color.fromARGB(255, 46, 53, 62),
                                   fontSize: 14),
                             )),
                       ),

@@ -1,31 +1,33 @@
-// ignore_for_file: unused_local_variable
-
+// import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
+// import 'package:cinebyte_network_application/production%20house/production_house_menu_page.dart';
+// import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_script_download.dart';
-import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+// import 'package:cinebyte_network_application/production%20house/production_house_settings_page.dart';
+import 'package:cinebyte_network_application/user/script_upload_page.dart';
+// import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class production_house_scripts_page extends StatefulWidget {
-  
-
-  production_house_scripts_page({super.key});
+class user_scheduled_scripts_page extends StatefulWidget {
+  user_scheduled_scripts_page({super.key});
 
   @override
-  State<production_house_scripts_page> createState() => _production_house_scripts_pageState();
+  State<user_scheduled_scripts_page> createState() =>
+      _user_scheduled_scripts_pageState();
 }
 
-class _production_house_scripts_pageState extends State<production_house_scripts_page> {
+class _user_scheduled_scripts_pageState
+    extends State<user_scheduled_scripts_page> {
   final List _scripts = ['script 1', 'script 2', 'script 3', 'script 4'];
 
   @override
   Widget build(BuildContext context) {
-      int bottomnavigation_indexnumber = 0;
+    // int bottomnavigation_indexnumber = 0;
 
     double width = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
-      appBar: Custom_appbar_real(title: 'Scripts'),
+      // appBar: Custom_appbar_real(title: 'Scripts'),
       body: ListView.builder(
         itemBuilder: (context, index) {
           return Padding(
@@ -33,8 +35,8 @@ class _production_house_scripts_pageState extends State<production_house_scripts
             child: Center(
               child: GestureDetector(
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => production_house_script_download_page(),
-                  )),
+                  builder: (context) => production_house_script_download_page(),
+                )),
                 child: Container(
                   margin: EdgeInsets.only(top: 40),
                   decoration: BoxDecoration(
@@ -47,8 +49,8 @@ class _production_house_scripts_pageState extends State<production_house_scripts
                         blurRadius: 5.0, // Blur radius of the shadow
                         spreadRadius:
                             2.0, // Spread radius (optional) to enlarge the shadow
-                        offset: Offset(
-                            2.0, 4.0), // Offset the shadow in x and y directions
+                        offset: Offset(2.0,
+                            4.0), // Offset the shadow in x and y directions
                       ),
                     ],
                   ),
@@ -64,7 +66,8 @@ class _production_house_scripts_pageState extends State<production_house_scripts
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 20, top: 10),
+                                padding:
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Row(
                                   children: [
                                     Text(
@@ -200,12 +203,13 @@ class _production_house_scripts_pageState extends State<production_house_scripts
       //   },
       // ),
 
-
-
-
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => script_upload_page(),
+          ));
+        },
         backgroundColor: Color.fromARGB(255, 234, 210, 178),
         child: Icon(Icons.add),
       ),

@@ -264,9 +264,7 @@ class _create_schedules_pageState extends State<user_date_negotiate_page> {
                     SizedBox(
                       height: 20,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    
                     Padding(
                       padding: const EdgeInsets.only(),
                       child: Padding(

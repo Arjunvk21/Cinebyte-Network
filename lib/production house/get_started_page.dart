@@ -1,5 +1,6 @@
 import 'package:cinebyte_network_application/production%20house/phone_number_verify.dart';
 import 'package:cinebyte_network_application/production%20house/register_account.dart';
+// import 'package:cinebyte_network_application/production%20house/register_account.dart';
 import 'package:cinebyte_network_application/production%20house/sign_in.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,10 @@ class get_started_page extends StatelessWidget {
       // ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 200),
+              padding: const EdgeInsets.only(),
               child: Text(
                 'Get Started!',
                 style: GoogleFonts.fugazOne(
@@ -49,10 +51,10 @@ class get_started_page extends StatelessWidget {
                 child: Text(
                   'Login',
                   style: GoogleFonts.fugazOne(
-                      color: Color(0xff2D3037), fontSize: 20),
+                      color: Color(0xff2D3037), fontSize: 25),
                 ),
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(200, 50), backgroundColor: mainbuttoncolor),
+                    minimumSize: Size(350, 60), backgroundColor: maintextcolor),
               ),
             ),
             const SizedBox(
@@ -64,16 +66,16 @@ class get_started_page extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => phone_number_verify(),
+                    builder: (context) => register_account(),
                   ));
                 },
                 child: Text(
                   'Register',
                   style: GoogleFonts.fugazOne(
-                      color: Color(0xff2D3037), fontSize: 20),
+                      color: Color(0xff2D3037), fontSize: 25),
                 ),
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(200, 50), backgroundColor: mainbuttoncolor),
+                    minimumSize: Size(350, 60), backgroundColor: maintextcolor),
               ),
             ),
           ],

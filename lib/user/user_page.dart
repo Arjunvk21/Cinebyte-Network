@@ -1,11 +1,21 @@
+import 'package:cinebyte_network_application/production%20house/production_house_settings_page.dart';
+import 'package:cinebyte_network_application/user/gallery_page.dart';
 import 'package:cinebyte_network_application/user/sinlge_post_view_page.dart';
+import 'package:cinebyte_network_application/user/user_home_page.dart';
+import 'package:cinebyte_network_application/user/user_menu_page.dart';
+import 'package:cinebyte_network_application/user/user_schedules_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class user_connect_page extends StatelessWidget {
+class user_connect_page extends StatefulWidget {
   const user_connect_page({super.key});
 
+  @override
+  State<user_connect_page> createState() => _user_connect_pageState();
+}
+
+class _user_connect_pageState extends State<user_connect_page> {
   @override
   Widget build(BuildContext context) {
     final List postslist = [1, 2, 34, 5, 6, 4, 3, 3];
@@ -99,7 +109,9 @@ class user_connect_page extends StatelessWidget {
               onPressed: () {},
               wsize: 70,
               text: 'Connect'),
-              SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: GridView.builder(
               gridDelegate:
@@ -131,6 +143,58 @@ class user_connect_page extends StatelessWidget {
             ),
           )
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 10,
+        items: [
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const user_home_page(),
+                      )),
+                  child: const Icon(Icons.home)),
+              label: 'home',
+              backgroundColor: const Color(0xff36393F)),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const user_page_menu_page(),
+                      )),
+                  child: const Icon(Icons.menu)),
+              label: 'Menu',
+              backgroundColor: const Color(0xff36393F)),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const gallery_page(),
+                      )),
+                  child: const Icon(Icons.add_box_outlined)),
+              label: 'Gallery',
+              backgroundColor: const Color(0xff36393F)),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => user_schedule_page(),
+                      )),
+                  child: const Icon(Icons.event_note)),
+              label: 'Schedules',
+              backgroundColor: const Color(0xff36393F)),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            const production_house_settings_page(),
+                      )),
+                  child: const Icon(Icons.settings)),
+              label: 'Settings',
+              backgroundColor: const Color(0xff36393F)),
+        ],
+        currentIndex: bottomnavigation_indexnumber,
+        onTap: (int index) {
+          setState(() {
+            bottomnavigation_indexnumber = index;
+          });
+        },
       ),
     );
   }
