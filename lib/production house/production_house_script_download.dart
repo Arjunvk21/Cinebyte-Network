@@ -1,148 +1,57 @@
-import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
-import 'package:cinebyte_network_application/production%20house/scripts_approve_or_reject_page.dart';
+import 'package:cinebyte_network_application/production%20house/create_schedules_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class production_house_script_download_page extends StatelessWidget {
-  const production_house_script_download_page({super.key});
 
+class production_house_script_download_page extends StatefulWidget {
+  DocumentSnapshot scripts;
+  DocumentSnapshot users;
+
+  production_house_script_download_page(
+      {Key? key, required this.scripts, required this.users})
+      : super(key: key);
+
+  @override
+  State<production_house_script_download_page> createState() =>
+      _production_house_script_download_pageState();
+}
+
+class _production_house_script_download_pageState
+    extends State<production_house_script_download_page> {
+  String? localFilePath;
+  @override
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width * 0.9;
     double height = MediaQuery.of(context).size.height * 0.8;
     return Scaffold(
       appBar: const Custom_appbar_real(title: 'Scripts/Synopsys'),
-      body: Column(
+      body: Center(child:Text('data') ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 40),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: const Color.fromARGB(255, 234, 210, 178),
-              ),
-              width: width,
-              height: height,
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(
-                          'https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg'),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Alex D Paul',
-                      style: GoogleFonts.acme(
-                        color: const Color(0xff2D3037),
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 90, right: 90),
-                    child: Divider(
-                      thickness: 1,
-                      color: Color(0xff36393F),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Title : Zero Point Paradox',
-                      style: GoogleFonts.acme(
-                        color: const Color(0xff2D3037),
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 90, right: 90),
-                    child: Divider(
-                      thickness: 1,
-                      color: Color(0xff36393F),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      '''A young scientist developing a revolutionary
-energy source must choose between personal
-gain and saving the planet.''',
-                      style: GoogleFonts.lateef(
-                        color: const Color(0xff2D3037),
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: width,
-                      height: 250,
-                      margin: const EdgeInsets.only(top: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: const Color.fromARGB(255, 220, 197, 167),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10, top: 20),
-                            child: Text(
-                              'Download the synopsis',
-                              style: GoogleFonts.acme(
-                                color: const Color.fromARGB(255, 37, 39, 45),
-                                fontSize: 25,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Icon(
-                            Icons.cloud_download,
-                            size: 90,
-                            color: Color(0xff2D3037),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: ElevatedButton(
-                                  style: const ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Color(0xff2D3037)),
-                                      minimumSize: MaterialStatePropertyAll(
-                                        Size(200, 40),
-                                      )),
-                                  onPressed: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            const scripts_approve_or_reject_page()));
-                                  },
-                                  child: Text(
-                                    "Download",
-                                    style: GoogleFonts.fugazOne(
-                                        color: Colors.white, fontSize: 14),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            backgroundColor: const Color.fromARGB(255, 234, 210, 178),
+            child: const Icon(Icons.close),
+          ),
+          SizedBox(
+            width: 50,
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => create_schedules_page(
+                  username: widget.users,
+                  scriptdata: widget.scripts,
+                ),
+              ));
+            },
+            backgroundColor: const Color.fromARGB(255, 234, 210, 178),
+            child: const Icon(Icons.check),
           ),
         ],
       ),

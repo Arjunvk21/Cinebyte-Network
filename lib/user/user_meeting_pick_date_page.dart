@@ -1,10 +1,12 @@
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class user_date_pick_page extends StatefulWidget {
-  const user_date_pick_page({super.key});
+  List<Map<String,dynamic>>? pickdate;
+  user_date_pick_page({super.key, this.pickdate});
 
   @override
   State<user_date_pick_page> createState() => _user_date_pick_pageState();
@@ -13,6 +15,7 @@ class user_date_pick_page extends StatefulWidget {
 class _user_date_pick_pageState extends State<user_date_pick_page> {
   @override
   Widget build(BuildContext context) {
+    
     final List listitems = ['list1', 'list2', 'list3', 'list4'];
     String? values;
     double width = MediaQuery.of(context).size.width * 0.9;
@@ -52,7 +55,6 @@ class _user_date_pick_pageState extends State<user_date_pick_page> {
                       },
                       items: listitems.map((valueitem) {
                         return DropdownMenuItem(
-                        
                           value: valueitem,
                           child: Text(valueitem),
                         );

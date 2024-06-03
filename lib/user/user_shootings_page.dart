@@ -42,7 +42,7 @@ class user_shootings_page extends StatelessWidget {
           
         },
         backgroundColor: Color.fromARGB(255, 234, 210, 178),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

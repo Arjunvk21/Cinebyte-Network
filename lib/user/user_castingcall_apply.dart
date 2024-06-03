@@ -1,9 +1,40 @@
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class user_casting_calls_clicked_page extends StatelessWidget {
-  const user_casting_calls_clicked_page({super.key});
+class user_casting_calls_clicked_page extends StatefulWidget {
+  final String? image;
+  const user_casting_calls_clicked_page({super.key, this.image});
+
+  @override
+  State<user_casting_calls_clicked_page> createState() =>
+      _user_casting_calls_clicked_pageState();
+}
+
+class _user_casting_calls_clicked_pageState
+    extends State<user_casting_calls_clicked_page> {
+  void _launchURL(String url) async {
+    if (!await launchUrl(Uri.parse(url))) throw 'Could not launch $url';
+  }
+
+  void _shareOnWhatsApp() {
+    final url =
+        'https://wa.me/?text=${Uri.encodeComponent('Check out this casting call! ${widget.image}')}';
+    _launchURL(url);
+  }
+
+  void _shareOnInstagram() {
+    final url =
+        'https://www.instagram.com/?url=${Uri.encodeComponent(widget.image ?? '')}';
+    _launchURL(url);
+  }
+
+  void _shareOnGmail() {
+    final url =
+        'mailto:?subject=Casting Call&body=Check out this casting call! ${widget.image}';
+    _launchURL(url);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +54,7 @@ class user_casting_calls_clicked_page extends StatelessWidget {
                   borderRadius: BorderRadius.circular(25)),
               clipBehavior: Clip.hardEdge,
               child: Image.network(
-                'https://m.media-amazon.com/images/M/MV5BMGM4NGMyN2QtYTE4NS00N2I2LThjZWYtYTQ0ZGRjNTYwN2RlXkEyXkFqcGdeQXVyMjkxNzQ1NDI@._V1_.jpg',
+                '${widget.image}',
                 fit: BoxFit.cover,
               ),
             ),
@@ -65,16 +96,16 @@ class user_casting_calls_clicked_page extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: _shareOnWhatsApp,
                                   icon: Image.asset('images/whatsapp1.png')),
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed: _shareOnInstagram,
                                   icon: Image.asset(
                                     'images/instagram.png',
                                     scale: 1,
                                   )),
                               IconButton(
-                                  onPressed: () {},
+                                  onPressed:_shareOnGmail,
                                   icon: Image.asset('images/gmail.png'))
                             ],
                           )

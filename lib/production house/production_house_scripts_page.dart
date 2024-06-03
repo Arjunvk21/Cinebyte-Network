@@ -1,7 +1,9 @@
+import 'package:cinebyte_network_application/firebase/databasemethods.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_script_download.dart';
 import 'package:cinebyte_network_application/user/script_upload_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,113 +18,175 @@ class producton_house_scripts_page extends StatefulWidget {
 
 class _producton_house_scripts_pageState
     extends State<producton_house_scripts_page> {
+  String userid = FirebaseAuth.instance.currentUser!.uid;
+  Stream? userstream;
+  Stream? scriptstream;
+
+  getOnTheLoad() async {
+    Stream Usersstream = await DatabaseMethods().getuserdetails(userid);
+    Stream Scriptstream = await DatabaseMethods().getscriptdetails();
+    userstream = Usersstream;
+    scriptstream = Scriptstream;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getOnTheLoad();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width * 0.8;
-
     return Scaffold(
       appBar: const Custom_appbar_real(title: 'Scripts'),
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(),
-                  child: Center(
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            const production_house_script_download_page(),
-                      )),
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 40),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: const Color.fromARGB(255, 234, 210, 178),
-                        ),
-                        width: width,
-                        height: 180,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        'https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg'),
-                                    radius: 25,
-                                  ),
+            child: StreamBuilder(
+              stream: scriptstream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    'Some error occurred',
+                    style: GoogleFonts.fugazOne(color: Colors.white),
+                  ));
+                }
+                if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                  final docs = snapshot.data!.docs;
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final document = docs[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Center(
+                          child: GestureDetector(
+                            onTap: () async {
+                              DocumentSnapshot usersnapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(document['userid'])
+                                      .get();
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    production_house_script_download_page(
+                                  scripts: document,
+                                  users: usersnapshot,
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 20, left: 10),
-                                  child: Text(
-                                    'Alex D Paul',
-                                    style: GoogleFonts.acme(
-                                      color: const Color(0xff2D3037),
-                                      fontSize: 20,
+                              ));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: const Color.fromARGB(255, 234, 210, 178),
+                              ),
+                              width: width,
+                              height: 180,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 20, top: 20),
+                                          child: Container(
+                                            child: Image.network(''),
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                          )),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 20, left: 10),
+                                        child: Text(
+                                          '${document['scriptname']}',
+                                          style: GoogleFonts.acme(
+                                            color: const Color(0xff2D3037),
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 30),
+                                        child: Text(
+                                          '${document['date']}', // Example date, you might want to format data['timestamp'] if available
+                                          style: GoogleFonts.acme(
+                                            color: const Color(0xff2D3037),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(),
+                                    child: Divider(
+                                      thickness: 1,
+                                      color: Color(0xff36393F),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 50),
-                                  child: Text(
-                                    '10/11/2023',
-                                    style: GoogleFonts.acme(
-                                        color: const Color(0xff2D3037)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(),
-                              child: Divider(
-                                thickness: 1,
-                                color: Color(0xff36393F),
-                              ),
-                            ),
-                            Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
                                   Center(
-                                    child: Text(
-                                      '''       A young scientist developing a revolutionary energy
-                              source must choose  between personal gain and 
-                              saving the planet. ''',
-                                      style: GoogleFonts.lateef(),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Center(
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 17),
+                                            child: Text(
+                                              '''${document['scriptdescription']}''',
+                                              style: GoogleFonts.acme(),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 17),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Genre : ${document['scriptgenre']} ',
+                                            style: GoogleFonts.acme(),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 17,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Genre : Sci-Fi , Survival Thriller ',
-                                      style: GoogleFonts.acme(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
+                      );
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      'No scripts available',
+                      style: GoogleFonts.fugazOne(color: Colors.white),
                     ),
-                  ),
-                );
+                  );
+                }
               },
-              itemCount: 10,
             ),
           ),
         ],
@@ -131,11 +195,11 @@ class _producton_house_scripts_pageState
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => script_upload_page(),
+            builder: (context) => const script_upload_page(),
           ));
         },
-        backgroundColor: Color.fromARGB(255, 234, 210, 178),
-        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 234, 210, 178),
+        child: const Icon(Icons.add),
       ),
     );
   }

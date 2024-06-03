@@ -70,78 +70,87 @@ class user_home_pageState extends State<user_home_page> {
               height: 40,
             ),
             StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              stream: _firstor.collection('Users').doc(id).snapshots(),
+              stream: _firstor.collection('users').doc(id).snapshots(),
               builder: (context, snapshot) {
-                DocumentSnapshot data = snapshot.data!;
-
-                return Padding(
-                  padding: const EdgeInsets.only(left: 0),
-                  child: Container(
-                    margin: const EdgeInsets.only(),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: const Color.fromARGB(255, 234, 210, 178),
-                    ),
-                    width: width,
-                    height: 170,
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, bottom: 20),
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundImage:
-                                    NetworkImage('${data['image']}'),
-                              )),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${data['name']}",
-                                style: GoogleFonts.acme(
-                                    fontSize: 20,
-                                    color:
-                                        const Color.fromARGB(255, 33, 33, 33)),
-                              ),
-                              Text(
-                                '${data['email']}',
-                                style: GoogleFonts.acme(fontSize: 15),
-                              ),
-                              Text(
-                                'Skill : ${data['skill']}',
-                                style: GoogleFonts.acme(fontSize: 15),
-                              ),
-                              Text(
-                                'Experience : ${data['experience']}',
-                                style: GoogleFonts.acme(fontSize: 15),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(left: 150),
-                                child: IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .push(MaterialPageRoute(
-                                        builder: (context) => skill_upload(),
-                                      ));
-                                    },
-                                    icon: const Icon(
-                                      Icons.add_card_rounded,
-                                      color: Color.fromARGB(255, 33, 33, 33),
-                                    )),
-                              )
-                            ],
-                          ),
-                        ],
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasData) {
+                  DocumentSnapshot data = snapshot.data!;
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 0),
+                    child: Container(
+                      margin: const EdgeInsets.only(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: const Color.fromARGB(255, 234, 210, 178),
+                      ),
+                      width: width,
+                      height: 170,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, bottom: 20),
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage:
+                                      NetworkImage('${data['image']}'),
+                                )),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${data['name']}",
+                                  style: GoogleFonts.acme(
+                                      fontSize: 20,
+                                      color: const Color.fromARGB(
+                                          255, 33, 33, 33)),
+                                ),
+                                Text(
+                                  '${data['email']}',
+                                  style: GoogleFonts.acme(fontSize: 15),
+                                ),
+                                Text(
+                                  'Skill : ${data['skill']}',
+                                  style: GoogleFonts.acme(fontSize: 15),
+                                ),
+                                Text(
+                                  'Experience : ${data['experience']}',
+                                  style: GoogleFonts.acme(fontSize: 15),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(left: 150),
+                                  child: IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) => skill_upload(),
+                                        ));
+                                      },
+                                      icon: const Icon(
+                                        Icons.add_card_rounded,
+                                        color: Color.fromARGB(255, 33, 33, 33),
+                                      )),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               },
             ),

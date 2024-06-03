@@ -19,7 +19,7 @@ class _skill_uploadState extends State<skill_upload> {
   @override
   Widget build(BuildContext context) {
     final CollectionReference Users =
-        FirebaseFirestore.instance.collection('Users');
+        FirebaseFirestore.instance.collection('users');
     // TextEditingController skillcontroller = TextEditingController();
     TextEditingController experiencecontroller = TextEditingController();
 
@@ -157,7 +157,7 @@ class _skill_uploadState extends State<skill_upload> {
 
                         Padding(
                           padding: const EdgeInsets.only(left: 50, right: 50),
-                          child: TextFormField(
+                          child: TextFormField(style: GoogleFonts.fugazOne(),
                             controller: experiencecontroller,
                             decoration: InputDecoration(
                                 hintText: 'Experience level',

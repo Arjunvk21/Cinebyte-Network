@@ -1,11 +1,12 @@
-// import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
-// import 'package:cinebyte_network_application/production%20house/production_house_menu_page.dart';
-// import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
+import 'dart:developer';
+
 import 'package:cinebyte_network_application/production%20house/production_house_script_download.dart';
-// import 'package:cinebyte_network_application/production%20house/production_house_settings_page.dart';
 import 'package:cinebyte_network_application/user/script_upload_page.dart';
-// import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+import 'package:cinebyte_network_application/user/user_script_approve_or_datenegotiate_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class user_scheduled_scripts_page extends StatefulWidget {
@@ -18,191 +19,218 @@ class user_scheduled_scripts_page extends StatefulWidget {
 
 class _user_scheduled_scripts_pageState
     extends State<user_scheduled_scripts_page> {
-  final List _scripts = ['script 1', 'script 2', 'script 3', 'script 4'];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<DocumentSnapshot> _scripts = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserScheduledScripts();
+  }
+
+  Future<void> fetchUserScheduledScripts() async {
+    User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      try {
+        QuerySnapshot snapshot1 = await _firestore
+            .collection('meetings')
+            .where('receiverUserId', isEqualTo: currentUser.uid)
+            .get();
+
+        QuerySnapshot snapshot2 = await _firestore
+            .collection('meetings')
+            .where('senderUserId', isEqualTo: currentUser.uid)
+            .get();
+
+        List<DocumentSnapshot> combinedResults = [];
+        combinedResults.addAll(snapshot1.docs);
+        combinedResults.addAll(snapshot2.docs);
+
+        Map<String, DocumentSnapshot> uniqueResults = {};
+        for (var doc in combinedResults) {
+          uniqueResults[doc.id] = doc;
+        }
+
+        // List<Map<String, dynamic>> scripts = [];
+
+        setState(() {
+          _scripts = uniqueResults.values.toList();
+          _isLoading = false;
+        });
+      } on FirebaseAuthException catch (e) {
+        Fluttertoast.showToast(
+          msg: "Error Fetching Scheduled Scripts: ${e.message}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // int bottomnavigation_indexnumber = 0;
-
     double width = MediaQuery.of(context).size.width * 0.8;
 
     return Scaffold(
-      // appBar: Custom_appbar_real(title: 'Scripts'),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 0),
-            child: Center(
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => production_house_script_download_page(),
-                )),
-                child: Container(
-                  margin: EdgeInsets.only(top: 40),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Color.fromARGB(255, 234, 210, 178),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(255, 0, 0, 0)
-                            .withOpacity(0.5), // Shadow color with transparency
-                        blurRadius: 5.0, // Blur radius of the shadow
-                        spreadRadius:
-                            2.0, // Spread radius (optional) to enlarge the shadow
-                        offset: Offset(2.0,
-                            4.0), // Offset the shadow in x and y directions
-                      ),
-                    ],
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _scripts.isEmpty
+              ? Center(
+                  child: Text(
+                    'No Scheduled Scripts Found',
+                    style: GoogleFonts.fugazOne(color: Colors.white),
                   ),
-                  width: width,
-                  height: 150,
-                  child: Center(
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 10),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'Script 1',
-                                      style: GoogleFonts.acme(fontSize: 30),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 150),
-                                      child: Text(
-                                        'zoom',
-                                        style: GoogleFonts.acme(
-                                            color: Color(0xff2D3037),
-                                            fontSize: 16),
-                                      ),
-                                    ),
-                                  ],
+                )
+              : ListView.builder(
+                  itemCount: _scripts.length,
+                  itemBuilder: (context, index) {
+                    var script = _scripts[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 0),
+                      child: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    user_scripts_approve_or_datenegotiate_page(
+                                  meetingDetails: script,
+                                  script: script,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 150),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 15),
-                                      child: Icon(Icons.calendar_month),
-                                    ),
-                                    Text(
-                                      'February 15',
-                                      style: GoogleFonts.acme(fontSize: 20),
-                                    ),
-                                  ],
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(top: 40),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color.fromARGB(255, 234, 210, 178),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 0, 0, 0)
+                                      .withOpacity(0.5),
+                                  blurRadius: 5.0,
+                                  spreadRadius: 2.0,
+                                  offset: Offset(2.0, 4.0),
                                 ),
+                              ],
+                            ),
+                            width: width,
+                            height: 150,
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 20, top: 10),
+                                          child: SizedBox(
+                                            width: 250,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  script['scriptName'] ?? '',
+                                                  style: GoogleFonts.acme(
+                                                      fontSize: 20),
+                                                ),
+                                                Spacer(),
+                                                Text(
+                                                  'zoom',
+                                                  style: GoogleFonts.acme(
+                                                      color: Color(0xff2D3037),
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 150),
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 15),
+                                                child:
+                                                    Icon(Icons.calendar_month),
+                                              ),
+                                              Text(
+                                                script['availableDates1']
+                                                    .toString(), // Placeholder, replace with actual data if available
+                                                style: GoogleFonts.acme(
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '1',
+                                                style: GoogleFonts.lateef(
+                                                    fontSize: 40),
+                                              ),
+                                              Text('Hr'),
+                                              SizedBox(width: 20),
+                                              Text(
+                                                'Start',
+                                                style: GoogleFonts.lateef(
+                                                    fontSize: 20),
+                                              ),
+                                              SizedBox(width: 6),
+                                              Text(
+                                                '9:30AM', // Placeholder, replace with actual data if available
+                                                style: GoogleFonts.lateef(
+                                                    fontSize: 25),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'End',
+                                                style: GoogleFonts.lateef(
+                                                    fontSize: 20),
+                                              ),
+                                              SizedBox(width: 6),
+                                              Text(
+                                                '10:30AM', // Placeholder, replace with actual data if available
+                                                style: GoogleFonts.lateef(
+                                                  fontSize: 25,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // ListTile(leading: Text('1 Hr',style: GoogleFonts.lateef(fontSize: 30),),
-                                    // titl)
-                                    Text(
-                                      '1',
-                                      style: GoogleFonts.lateef(fontSize: 40),
-                                    ),
-                                    Text('Hr'),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      'Start',
-                                      style: GoogleFonts.lateef(fontSize: 20),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      '9:30AM',
-                                      style: GoogleFonts.lateef(fontSize: 25),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      'End',
-                                      style: GoogleFonts.lateef(fontSize: 20),
-                                    ),
-                                    SizedBox(
-                                      width: 6,
-                                    ),
-                                    Text(
-                                      '10:30AM',
-                                      style: GoogleFonts.lateef(
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              ),
-            ),
-          );
-        },
-        itemCount: _scripts.length,
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   elevation: 10,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //         icon: GestureDetector(
-      //             onTap: () => Navigator.of(context).push(MaterialPageRoute(
-      //                   builder: (context) => production_house_home_page(),
-      //                 )),
-      //             child: Icon(Icons.home)),
-      //         label: 'home',
-      //         backgroundColor: Color(0xff36393F)),
-      //     BottomNavigationBarItem(
-      //         icon: GestureDetector(
-      //             onTap: () => Navigator.of(context).push(MaterialPageRoute(
-      //                   builder: (context) => production_page_menu_page(),
-      //                 )),
-      //             child: Icon(Icons.menu)),
-      //         label: 'Menu',
-      //         backgroundColor: Color(0xff36393F)),
-      //     BottomNavigationBarItem(
-      //         icon: GestureDetector(
-      //             onTap: () => Navigator.of(context).push(MaterialPageRoute(
-      //                   builder: (context) => production_house_schedules_page(),
-      //                 )),
-      //             child: Icon(Icons.event_note)),
-      //         label: 'Schedules',
-      //         backgroundColor: Color(0xff36393F)),
-      //     BottomNavigationBarItem(
-      //         icon: GestureDetector(
-      //             onTap: () => Navigator.of(context).push(MaterialPageRoute(
-      //                   builder: (context) => production_house_settings_page(),
-      //                 )),
-      //             child: Icon(Icons.settings)),
-      //         label: 'Settings',
-      //         backgroundColor: Color(0xff36393F)),
-      //   ],
-      //   currentIndex: bottomnavigation_indexnumber,
-      //   onTap: (int index) {
-      //     setState(() {
-      //       bottomnavigation_indexnumber = index;
-      //     });
-      //   },
-      // ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {

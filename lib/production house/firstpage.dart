@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:cinebyte_network_application/production%20house/get_started_page.dart';
+import 'package:cinebyte_network_application/user/bottomnav.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class firstPage extends StatefulWidget {
   const firstPage({super.key});
@@ -12,11 +14,39 @@ class firstPage extends StatefulWidget {
 }
 
 class _firstPageState extends State<firstPage> {
+  String? email;
+  String? userid;
+  String? _token;
+
+  getData() async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    _token = _pref.getString('token');
+    email = _pref.getString('email');
+    userid = _pref.getString('userid');
+  }
+
   @override
   void initState() {
+    getData();
+    var d = Duration(seconds: 3);
+    Future.delayed(d, () {
+      checkloginstatus();
+    });
+
     // TODO: implement initState
     super.initState();
-    Timer(Duration(seconds: 5 ), () { Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => get_started_page(),));});
+  }
+
+  Future<void> checkloginstatus() async {
+    if (_token == null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => get_started_page(),
+      ));
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => custombottomnavigationbar(),
+      ));
+    }
   }
 
   @override
@@ -35,17 +65,6 @@ class _firstPageState extends State<firstPage> {
               style: GoogleFonts.fugazOne(
                 color: Color.fromARGB(255, 244, 207, 139),
               ))
-          // RichText(
-          //     text: TextSpan(
-          //         style: TextStyle(color: Color(0xffF4D193)),
-          //         children: [
-          //       TextSpan(
-          //           text: 'CineByte Network',
-          //           style: TextStyle(fontSize: 30)),
-          //       TextSpan(
-          //           text:
-          //               '\n\nI would rather die for passion rather than boredom')
-          //     ]))
         ],
       ),
     ));

@@ -2,6 +2,8 @@
 
 // import 'dart:developer';
 
+import 'package:cinebyte_network_application/firebase/_auth_service.dart';
+import 'package:cinebyte_network_application/model/user_model.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/production%20house/register_account.dart';
 import 'package:cinebyte_network_application/production%20house/reset_password.dart';
@@ -25,17 +27,20 @@ class _Sign_in_pageState extends State<Sign_in_page> {
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
 
+  UserModel _userModel = UserModel();
+  AuthService _authService = AuthService();
+
   bool isloading = false;
 
-  login(BuildContext context) async {
-    if (password != null) {
-      try {
-        setState(() {
-          isloading = true;
-        });
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        // ignore: use_build_context_synchronously
+  void _login() async {
+    setState(() {
+      isloading = true;
+    });
+    try {
+      _userModel = UserModel(
+          email: emailcontroller.text, password: passwordcontroller.text);
+      final data = await _authService.loginUser(_userModel);
+      if (data != null) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Sign in successful'),
         ));
@@ -45,25 +50,63 @@ class _Sign_in_pageState extends State<Sign_in_page> {
             builder: (context) => const custombottomnavigationbar(),
           ),
         );
-        setState(() {
-          isloading = false;
-        });
-      } on FirebaseAuthException catch (e) {
-        setState(() {
-          isloading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Invaild Email or Password"),
-            backgroundColor:
-                Theme.of(context).colorScheme.error, // Use error color
-          ),
-        );
-
-        // Show error message to user
       }
+      setState(() {
+        isloading = false;
+      });
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        isloading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Invaild Email or Password"),
+          backgroundColor:
+              Theme.of(context).colorScheme.error, // Use error color
+        ),
+      );
+
+      // Show error message to user
     }
   }
+
+  // login(BuildContext context) async {
+  //   if (password != null) {
+  //     try {
+  //       setState(() {
+  //         isloading = true;
+  //       });
+  //       UserCredential userCredential = await FirebaseAuth.instance
+  //           .signInWithEmailAndPassword(email: email, password: password);
+  //       // ignore: use_build_context_synchronously
+  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //         content: Text('Sign in successful'),
+  //       ));
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const custombottomnavigationbar(),
+  //         ),
+  //       );
+  //       setState(() {
+  //         isloading = false;
+  //       });
+  //     } on FirebaseAuthException catch (e) {
+  //       setState(() {
+  //         isloading = false;
+  //       });
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text("Invaild Email or Password"),
+  //           backgroundColor:
+  //               Theme.of(context).colorScheme.error, // Use error color
+  //         ),
+  //       );
+
+  //       // Show error message to user
+  //     }
+  //   }
+  // }
 
   void _submitform() {
     if (_formkey.currentState!.validate()) {
@@ -196,14 +239,7 @@ class _Sign_in_pageState extends State<Sign_in_page> {
                           isloading = true;
                         });
                         if (_formkey.currentState!.validate()) {
-                          setState(() {
-                            email = emailcontroller.text;
-                            password = passwordcontroller.text;
-                          });
-                          await login(context);
-                          setState(() {
-                            isloading = false;
-                          });
+                          _login();
                         }
                       },
                       child: isloading

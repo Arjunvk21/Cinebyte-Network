@@ -1,3 +1,4 @@
+import 'package:cinebyte_network_application/production%20house/get_started_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_menu_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
@@ -66,7 +67,7 @@ class _user_settings_pageState extends State<user_settings_page> {
           width: 480,
           height: 350,
           decoration: BoxDecoration(
-            color:  Color.fromARGB(255, 39, 39, 39),
+            color: Color.fromARGB(255, 39, 39, 39),
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
@@ -86,7 +87,9 @@ class _user_settings_pageState extends State<user_settings_page> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => production_house_user_profile_page(),)),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => production_house_user_profile_page(),
+                  )),
                   child: Container(
                     width: width,
                     decoration: BoxDecoration(
@@ -164,7 +167,11 @@ class _user_settings_pageState extends State<user_settings_page> {
                             ),
                           ),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => get_started_page(),
+                                ));
+                              },
                               icon: Icon(Icons.arrow_circle_right_sharp)),
                         ),
                       ),

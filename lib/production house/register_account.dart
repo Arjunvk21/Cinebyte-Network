@@ -1,4 +1,6 @@
+import 'package:cinebyte_network_application/firebase/_auth_service.dart';
 import 'package:cinebyte_network_application/firebase/firestore.dart';
+import 'package:cinebyte_network_application/model/user_model.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/production%20house/sign_in.dart';
 import 'package:cinebyte_network_application/user/bottomnav.dart';
@@ -18,6 +20,8 @@ class register_account extends StatefulWidget {
 }
 
 class _register_accountState extends State<register_account> {
+  UserModel _usermodel = UserModel();
+  AuthService _authservice = AuthService();
   // String? _name;
   bool _issecurepassword = true;
   String email = "", password = "";
@@ -25,33 +29,43 @@ class _register_accountState extends State<register_account> {
   TextEditingController usernamecontroller = TextEditingController();
   final TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
-
   final TextEditingController _confirmpassword = TextEditingController();
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  Future<void> addfirebase(
-      Map<String, dynamic> registereduserinfomap, String userid) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('Users')
-          .doc(userid)
-          .set(registereduserinfomap);
-    } catch (e) {
-      print('Error adding document: $e');
-      throw e; // Rethrow the error so the caller can handle it
-    }
-  }
+  // Future<void> addfirebase(
+  //     Map<String, dynamic> registereduserinfomap, String userid) async {
+  //   try {
+  //     await FirebaseFirestore.instance
+  //         .collection('Users')
+  //         .doc(userid)
+  //         .set(registereduserinfomap);
+  //   } catch (e) {
+  //     print('Error adding document: $e');
+  //     throw e; // Rethrow the error so the caller can handle it
+  //   }
+  // }
 
   registration() async {
-    if (password != null) {
-      try {
-        setState(() {
-          isloading = true;
-        });
-        UserCredential usercredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-        // ignore: use_build_context_synchronously
+    setState(() {
+      isloading = true;
+    });
+
+    _usermodel = UserModel(
+      email: _emailcontroller.text,
+      name: usernamecontroller.text,
+      password: _passwordcontroller.text,
+      experience: '',
+      skill: '',
+      image: '',
+    );
+
+    try {
+      setState(() {
+        isloading = true;
+      });
+      final userdata = await _authservice.registerUser(_usermodel);
+      if (userdata != null) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registration successful')));
         Navigator.pushReplacement(
@@ -60,47 +74,80 @@ class _register_accountState extends State<register_account> {
             MaterialPageRoute(
               builder: (context) => const custombottomnavigationbar(),
             ));
-        setState(() {
-          isloading = false;
-        });
-        // String registered_user_id = randomString(10);
-        // Map<String, dynamic> registereduserinfomap = {
-        //   "name": usernamecontroller.text,
-        //   'email': _emailcontroller.text,
-        //   "password": _passwordcontroller.text,
-        //   "id": registered_user_id,
-        // };
-        String registeredUserId = FirebaseAuth.instance.currentUser!.uid;
-
-        Map<String, dynamic> registeredUserInfoMap = {
-          "name": usernamecontroller.text,
-          'email': _emailcontroller.text,
-          "password": _passwordcontroller.text,
-          "id": registeredUserId,
-          "image": '',
-          "skill": '',
-          "experience": '',
-        };
-        await addfirebase(registeredUserInfoMap, registeredUserId);
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        isloading = false;
+      });
+      if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('Registration successful. User details added successfully.'),
+          content: Text('Weak password'),
         ));
-      } on FirebaseAuthException catch (e) {
-        setState(() {
-          isloading = false;
-        });
-        if (e.code == 'weak-password') {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Weak password'),
-          ));
-        } else if (e.code == 'email-already-in-use') {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Email is already in use'),
-          ));
-        }
+      } else if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar( SnackBar(backgroundColor:  Color(0xffF4D193),
+          content: Text('Email is already in use',style: GoogleFonts.fugazOne( color:
+                                        const Color.fromARGB(255, 46, 53, 62),)),
+        ));
       }
     }
+
+    // if (password != null) {
+    //   try {
+    //     setState(() {
+    //       isloading = true;
+    //     });
+    //     UserCredential usercredential = await FirebaseAuth.instance
+    //         .createUserWithEmailAndPassword(email: email, password: password);
+    //     // ignore: use_build_context_synchronously
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //         const SnackBar(content: Text('Registration successful')));
+    //     Navigator.pushReplacement(
+    //         // ignore: use_build_context_synchronously
+    //         context,
+    //         MaterialPageRoute(
+    //           builder: (context) => const custombottomnavigationbar(),
+    //         ));
+    //     setState(() {
+    //       isloading = false;
+    //     });
+    //     // String registered_user_id = randomString(10);
+    //     // Map<String, dynamic> registereduserinfomap = {
+    //     //   "name": usernamecontroller.text,
+    //     //   'email': _emailcontroller.text,
+    //     //   "password": _passwordcontroller.text,
+    //     //   "id": registered_user_id,
+    //     // };
+    //     String registeredUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    //     Map<String, dynamic> registeredUserInfoMap = {
+    //       "name": usernamecontroller.text,
+    //       'email': _emailcontroller.text,
+    //       "password": _passwordcontroller.text,
+    //       "id": registeredUserId,
+    //       "image": '',
+    //       "skill": '',
+    //       "experience": '',
+    //     };
+    //     await addfirebase(registeredUserInfoMap, registeredUserId);
+    //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //       content:
+    //           Text('Registration successful. User details added successfully.'),
+    //     ));
+    //   } on FirebaseAuthException catch (e) {
+    //     setState(() {
+    //       isloading = false;
+    //     });
+    //     if (e.code == 'weak-password') {
+    //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //         content: Text('Weak password'),
+    //       ));
+    //     } else if (e.code == 'email-already-in-use') {
+    //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //         content: Text('Email is already in use'),
+    //       ));
+    //     }
+    //   }
+    // }
   }
 
   String? _validateemail(value) {
@@ -293,14 +340,7 @@ class _register_accountState extends State<register_account> {
                             isloading = true;
                           });
                           if (_formkey.currentState!.validate()) {
-                            setState(() {
-                              email = _emailcontroller.text;
-                              password = _passwordcontroller.text;
-                            });
-                            await registration();
-                            setState(() {
-                              isloading = false;
-                            });
+                            registration();
                           }
                         },
                         child: isloading

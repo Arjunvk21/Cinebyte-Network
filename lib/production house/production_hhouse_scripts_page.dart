@@ -7,20 +7,20 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class production_house_scripts_page extends StatefulWidget {
-  
-
   production_house_scripts_page({super.key});
 
   @override
-  State<production_house_scripts_page> createState() => _production_house_scripts_pageState();
+  State<production_house_scripts_page> createState() =>
+      _production_house_scripts_pageState();
 }
 
-class _production_house_scripts_pageState extends State<production_house_scripts_page> {
+class _production_house_scripts_pageState
+    extends State<production_house_scripts_page> {
   final List _scripts = ['script 1', 'script 2', 'script 3', 'script 4'];
 
   @override
   Widget build(BuildContext context) {
-      int bottomnavigation_indexnumber = 0;
+    int bottomnavigation_indexnumber = 0;
 
     double width = MediaQuery.of(context).size.width * 0.8;
 
@@ -32,9 +32,6 @@ class _production_house_scripts_pageState extends State<production_house_scripts
             padding: const EdgeInsets.only(left: 0),
             child: Center(
               child: GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => production_house_script_download_page(),
-                  )),
                 child: Container(
                   margin: EdgeInsets.only(top: 40),
                   decoration: BoxDecoration(
@@ -47,8 +44,8 @@ class _production_house_scripts_pageState extends State<production_house_scripts
                         blurRadius: 5.0, // Blur radius of the shadow
                         spreadRadius:
                             2.0, // Spread radius (optional) to enlarge the shadow
-                        offset: Offset(
-                            2.0, 4.0), // Offset the shadow in x and y directions
+                        offset: Offset(2.0,
+                            4.0), // Offset the shadow in x and y directions
                       ),
                     ],
                   ),
@@ -64,7 +61,8 @@ class _production_house_scripts_pageState extends State<production_house_scripts
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 20, top: 10),
+                                padding:
+                                    const EdgeInsets.only(left: 20, top: 10),
                                 child: Row(
                                   children: [
                                     Text(
@@ -199,9 +197,6 @@ class _production_house_scripts_pageState extends State<production_house_scripts
       //     });
       //   },
       // ),
-
-
-
 
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(

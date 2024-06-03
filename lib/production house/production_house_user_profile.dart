@@ -32,7 +32,7 @@ class _production_house_user_profile_pageState
   final _firstor = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final CollectionReference Users =
-      FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('users');
   bool _isEditing = false;
 
   final TextEditingController _usernamecontroller = TextEditingController();
@@ -66,7 +66,7 @@ class _production_house_user_profile_pageState
       appBar: const Custom_appbar_real(title: 'User Profile'),
       body: SingleChildScrollView(
         child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: _firstor.collection('Users').doc(id).snapshots(),
+            stream: _firstor.collection('users').doc(id).snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 Center(
@@ -75,7 +75,6 @@ class _production_house_user_profile_pageState
               }
 
               DocumentSnapshot data = snapshot.data!;
-
 
               _usernamecontroller.text = data['name'] ?? '';
               _emailcontroller.text = data['email'] ?? '';
@@ -125,7 +124,7 @@ class _production_house_user_profile_pageState
                                           String id = FirebaseAuth
                                               .instance.currentUser!.uid;
                                           FirebaseFirestore.instance
-                                              .collection('Users')
+                                              .collection('users')
                                               .doc(id)
                                               .update({'image': url});
                                         });
@@ -246,10 +245,9 @@ class _production_house_user_profile_pageState
                                         )),
                                     onPressed: () {
                                       UpdateProfiles(id);
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const custombottomnavigationbar()));
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              const custombottomnavigationbar()));
                                     },
                                     child: Text(
                                       "Save Changes",

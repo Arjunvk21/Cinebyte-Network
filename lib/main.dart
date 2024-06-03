@@ -35,6 +35,7 @@
 // import 'package:cinebyte_network_application/scripts_approve_or_reject_page.dart';
 
 import 'package:cinebyte_network_application/business_logic/firebase_options.dart';
+import 'package:cinebyte_network_application/production%20house/firstpage.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_schedules_page.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_settings_page.dart';
@@ -45,6 +46,7 @@ import 'package:cinebyte_network_application/production%20house/sign_in.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_home_page.dart';
 import 'package:cinebyte_network_application/user/bottomnav.dart';
 import 'package:cinebyte_network_application/user/gallery_page.dart';
+import 'package:cinebyte_network_application/user/shajini/tabbarforshajini.dart';
 // import 'package:cinebyte_network_application/production%20house/register_account.dart';
 import 'package:cinebyte_network_application/user/user_home_page.dart';
 import 'package:cinebyte_network_application/user/user_menu_page.dart';
@@ -72,7 +74,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromARGB(255, 33, 33, 33),
         useMaterial3: true,
       ),
-      home:  const custombottomnavigationbar(),
+      home:  const firstPage(),
     );
   }
 }
