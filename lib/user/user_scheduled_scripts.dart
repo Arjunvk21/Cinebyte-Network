@@ -94,20 +94,73 @@ class _user_scheduled_scripts_pageState
                   itemCount: _scripts.length,
                   itemBuilder: (context, index) {
                     var script = _scripts[index];
+                    String meetingStatus = script['meetingStatus'] ?? '';
+                    String confirmedDate = script['confirmedDate'] ?? '';
+                    Map<String, dynamic> availableTime1 =
+                        script['availableTime1'] ?? '';
+                    Color iconColor;
+                    switch (meetingStatus) {
+                      case 'Accepted':
+                        iconColor = Colors.green;
+                        break;
+                      case 'Rejected':
+                        iconColor = Colors.red;
+                        break;
+                      default:
+                        iconColor = Colors.grey;
+                    }
+
                     return Padding(
                       padding: const EdgeInsets.only(left: 0),
                       child: Center(
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    user_scripts_approve_or_datenegotiate_page(
-                                  meetingDetails: script,
-                                  script: script,
+                            if (confirmedDate.isNotEmpty &&
+                                meetingStatus == 'Accepted') {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 234, 210, 178),
+                                    title: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'Meeting scheduled',
+                                            style:
+                                                GoogleFonts.acme(fontSize: 20),
+                                          ),
+                                          Text(
+                                            'Date : $confirmedDate',
+                                            style:
+                                                GoogleFonts.acme(fontSize: 17),
+                                          ),
+                                          Text(
+                                            'Time : $availableTime1',
+                                            style:
+                                                GoogleFonts.acme(fontSize: 17),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      user_scripts_approve_or_datenegotiate_page(
+                                    meetingDetails: script,
+                                    script: script,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
                           },
                           child: Container(
                             margin: EdgeInsets.only(top: 40),
@@ -148,12 +201,10 @@ class _user_scheduled_scripts_pageState
                                                       fontSize: 20),
                                                 ),
                                                 Spacer(),
-                                                Text(
-                                                  'zoom',
-                                                  style: GoogleFonts.acme(
-                                                      color: Color(0xff2D3037),
-                                                      fontSize: 16),
-                                                ),
+                                                Icon(
+                                                  Icons.check_circle,
+                                                  color: iconColor,
+                                                )
                                               ],
                                             ),
                                           ),
@@ -231,16 +282,16 @@ class _user_scheduled_scripts_pageState
                     );
                   },
                 ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => script_upload_page(),
-          ));
-        },
-        backgroundColor: Color.fromARGB(255, 234, 210, 178),
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.of(context).push(MaterialPageRoute(
+      //       builder: (context) => script_upload_page(),
+      //     ));
+      //   },
+      //   backgroundColor: Color.fromARGB(255, 234, 210, 178),
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }

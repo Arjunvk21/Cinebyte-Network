@@ -1,11 +1,17 @@
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class user_casting_calls_clicked_page extends StatefulWidget {
   final String? image;
-  const user_casting_calls_clicked_page({super.key, this.image});
+  final String? whatsappNumber;
+  final String? instaID;
+  final String? emailID;
+  const user_casting_calls_clicked_page(
+      {super.key, this.image, this.emailID, this.instaID, this.whatsappNumber});
 
   @override
   State<user_casting_calls_clicked_page> createState() =>
@@ -14,26 +20,46 @@ class user_casting_calls_clicked_page extends StatefulWidget {
 
 class _user_casting_calls_clicked_pageState
     extends State<user_casting_calls_clicked_page> {
-  void _launchURL(String url) async {
-    if (!await launchUrl(Uri.parse(url))) throw 'Could not launch $url';
+  _launchWhatsapp() async {
+    var whatsapp = widget.whatsappNumber;
+    var whatsappAndroid =
+        Uri.parse("whatsapp://send?phone=$whatsapp&text=hello");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
+    }
   }
 
-  void _shareOnWhatsApp() {
-    final url =
-        'https://wa.me/?text=${Uri.encodeComponent('Check out this casting call! ${widget.image}')}';
-    _launchURL(url);
+  _launchInstagram() async {
+    final nativeUrl = 'instagram://user?username=${widget.emailID}';
+    var webUrl = "https://www.instagram.com/${widget.emailID}";
+
+    try {
+      await launchUrlString(nativeUrl!, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      print(e);
+      await launchUrlString(webUrl, mode: LaunchMode.platformDefault);
+    }
   }
 
-  void _shareOnInstagram() {
-    final url =
-        'https://www.instagram.com/?url=${Uri.encodeComponent(widget.image ?? '')}';
-    _launchURL(url);
-  }
+  _sendMail() async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: widget.emailID, // This should be the recipient's email address
+      // query: 'subject=Sample Subject&body=This is a sample email body', // Optional: Add subject and body if needed
+    );
 
-  void _shareOnGmail() {
-    final url =
-        'mailto:?subject=Casting Call&body=Check out this casting call! ${widget.image}';
-    _launchURL(url);
+    var uriString = params.toString();
+    if (await canLaunch(uriString)) {
+      await launch(uriString);
+    } else {
+      throw 'Could not launch $uriString';
+    }
   }
 
   @override
@@ -96,16 +122,22 @@ class _user_casting_calls_clicked_pageState
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               IconButton(
-                                  onPressed: _shareOnWhatsApp,
+                                  onPressed: () {
+                                    _launchWhatsapp();
+                                  },
                                   icon: Image.asset('images/whatsapp1.png')),
                               IconButton(
-                                  onPressed: _shareOnInstagram,
+                                  onPressed: () {
+                                    _launchInstagram();
+                                  },
                                   icon: Image.asset(
                                     'images/instagram.png',
                                     scale: 1,
                                   )),
                               IconButton(
-                                  onPressed:_shareOnGmail,
+                                  onPressed: () {
+                                    _sendMail();
+                                  },
                                   icon: Image.asset('images/gmail.png'))
                             ],
                           )

@@ -1,42 +1,81 @@
+import 'package:cinebyte_network_application/firebase/rentalBookedService.dart';
+import 'package:cinebyte_network_application/model/rentalBookedModel.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 class rental_services_detail_page extends StatefulWidget {
-  const rental_services_detail_page({super.key});
+  DocumentSnapshot? rentDetails;
+
+  rental_services_detail_page({super.key, this.rentDetails});
 
   @override
-  State<rental_services_detail_page> createState() => _rental_services_detail_pageState();
+  State<rental_services_detail_page> createState() =>
+      _rental_services_detail_pageState();
 }
 
-class _rental_services_detail_pageState extends State<rental_services_detail_page> {
+class _rental_services_detail_pageState
+    extends State<rental_services_detail_page> {
+  DateTime? datetime = DateTime.now();
+  int _quantity = 0;
   @override
   Widget build(BuildContext context) {
+    TextEditingController dateTimeCOntroller = TextEditingController();
     double width = MediaQuery.of(context).size.width * 0.9;
-        DateTime _datetime = DateTime.now();
 
     double height = MediaQuery.of(context).size.height * 0.7;
-    void _showdatepicker() {
-      showDatePicker(
-              context: context,
-              firstDate: DateTime.now(),
-              lastDate: DateTime(2050))
-          .then((value) => setState(() {
-                _datetime = value!;
-              }));
+    incrementQuantity() {
+      setState(() {
+        _quantity++;
+      });
     }
+
+    decrementQuantity() {
+      setState(() {
+        _quantity--;
+      });
+    }
+
+    Future<void> selectedDate(BuildContext context) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null && picked != datetime) {
+        setState(() {
+          datetime = picked;
+        });
+      }
+    }
+
+    // void showdatepicker() {
+    //   showDatePicker(
+    //           context: context,
+    //           firstDate: DateTime.now(),
+    //           lastDate: DateTime(2050))
+    //       .then((value) => setState(() {
+    //             datetime = value!;
+    //           }));
+    // }
+
+    dateTimeCOntroller.text = "${datetime!.toLocal()}".split(' ')[0];
     return Scaffold(
-      appBar: Custom_appbar_real(title: 'Rental services'),
+      appBar: const Custom_appbar_real(title: 'Rental services'),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 40, left: 50, right: 50),
             child: TextFormField(
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search, color: Colors.white),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   hintText: 'Search',
                   hintStyle: GoogleFonts.fugazOne(color: Colors.white),
                   border: OutlineInputBorder(
@@ -46,10 +85,10 @@ class _rental_services_detail_pageState extends State<rental_services_detail_pag
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 30),
+            margin: const EdgeInsets.only(top: 30),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: Color.fromARGB(255, 234, 210, 178),
+              color: const Color.fromARGB(255, 234, 210, 178),
             ),
             width: width,
             height: height,
@@ -58,100 +97,32 @@ class _rental_services_detail_pageState extends State<rental_services_detail_pag
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Sony Alpha 7',
+                    widget.rentDetails?['productName'],
                     style: GoogleFonts.fugazOne(
-                      color: Color.fromARGB(255, 46, 53, 62),
+                      color: const Color.fromARGB(255, 46, 53, 62),
                       fontSize: 18,
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                        padding: const EdgeInsets.only(left: 50),
-                        child: Image.asset('images/cam.png')),
-                    Column(
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.favorite,
-                              color: Colors.red[600],
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(),
-                          child: IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.shopping_cart)),
-                        )
-                      ],
-                    ),
+                    Image.network(widget.rentDetails?['productImage']),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 35,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(164, 167, 167, 171),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Column(
-                          children: [
-                            Image.asset('images/cam.png',scale: 5,),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 35,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(164, 167, 167, 171),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Column(
-                          children: [
-                            Image.asset('images/cam.png',scale: 5,),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 35,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(164, 167, 167, 171),
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Column(
-                          children: [
-                            Image.asset('images/cam.png',scale: 5,),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Center(
                     child: Text(
-                      'Sony Alpha ILCE-7M3K Full-Frame 24.2MP Mirrorless Digital SLR Camera with 28-70mm Zoom Lens (4K Full Frame, Real-Time Eye Auto Focus, Tiltable LCD, Low Light Camera) with Free Bag - Black',
+                      widget.rentDetails?['productDecription'],
                       style: GoogleFonts.fugazOne(
-                        color: Color.fromARGB(255, 46, 53, 62),
+                        color: const Color.fromARGB(255, 46, 53, 62),
                       ),
                     ),
                   ),
@@ -161,34 +132,39 @@ class _rental_services_detail_pageState extends State<rental_services_detail_pag
                     Padding(
                       padding: const EdgeInsets.only(top: 10, left: 20),
                       child: Text(
-                        '17000/Day',
+                        widget.rentDetails?['productratePerDay'],
                         style: GoogleFonts.fugazOne(
-                          color: Color.fromARGB(255, 46, 53, 62),
+                          color: const Color.fromARGB(255, 46, 53, 62),
                           fontSize: 18,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 120,
+                    const SizedBox(
+                      width: 50,
                     ),
+                    IconButton(
+                        onPressed: () {
+                          incrementQuantity();
+                        },
+                        icon: const Icon(Icons.add)),
                     Padding(
-                      padding: const EdgeInsets.only(
-                        top: 10,
-                      ),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Text(
-                        'Quantity',
+                        '$_quantity',
                         style: GoogleFonts.fugazOne(
-                          color: Color.fromARGB(255, 46, 53, 62),
+                          color: const Color.fromARGB(255, 46, 53, 62),
                           fontSize: 18,
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
-                    IconButton(onPressed: () {
-
-                    }, icon: Icon(Icons.add))
+                    IconButton(
+                        onPressed: () {
+                          decrementQuantity();
+                        },
+                        icon: const Icon(Icons.minimize))
                   ],
                 ),
                 Padding(
@@ -196,9 +172,12 @@ class _rental_services_detail_pageState extends State<rental_services_detail_pag
                   child: Row(
                     children: [
                       Text(
-                        'Select your date',
+                        datetime == null
+                            ? 'No Date Selected'
+                            : 'Selected Date : ${datetime!.toLocal()}'
+                                .split(' ')[0],
                         style: GoogleFonts.fugazOne(
-                          color: Color.fromARGB(255, 46, 53, 62),
+                          color: const Color.fromARGB(255, 46, 53, 62),
                           fontSize: 18,
                         ),
                       ),
@@ -208,42 +187,34 @@ class _rental_services_detail_pageState extends State<rental_services_detail_pag
                 Padding(
                   padding: const EdgeInsets.only(left: 50, right: 50),
                   child: TextFormField(
+                    controller: dateTimeCOntroller,
                     decoration: InputDecoration(
-                        // label: Text(
-                        //   'Username',
-                        //   style: GoogleFonts.fugazOne(),
-                        // ),
-                        suffixIcon: IconButton(onPressed: (){
-                          
-                                      _showdatepicker();
-                                    
-                        }, icon: Icon(Icons.calendar_month))),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              selectedDate(context);
+                            },
+                            icon: const Icon(Icons.calendar_month))),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(20),
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Color(0xff2D3037)),
-                              minimumSize: MaterialStatePropertyAll(
-                                Size(200, 40),
-                              )),
-                          onPressed: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => register_account()));
-                          },
-                          child: Text(
-                            "Book",
-                            style: GoogleFonts.fugazOne(
-                                color: Colors.white, fontSize: 14),
-                          )),
-                    ),
+                    child: ElevatedButton(
+                        style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Color(0xff2D3037)),
+                            minimumSize: MaterialStatePropertyAll(
+                              Size(200, 40),
+                            )),
+                        onPressed: () {
+                          bookProduct();
+                        },
+                        child: Text(
+                          "Book",
+                          style: GoogleFonts.fugazOne(
+                              color: Colors.white, fontSize: 14),
+                        )),
                   ),
                 ),
               ],
@@ -252,5 +223,40 @@ class _rental_services_detail_pageState extends State<rental_services_detail_pag
         ],
       ),
     );
+  }
+
+  bookProduct() {
+    try {
+      String userid = FirebaseAuth.instance.currentUser!.uid;
+      var bookedProductId = Uuid().v1();
+      rentalBookedModel rentmap = rentalBookedModel(
+          rentalBookedId: bookedProductId,
+          bookedUserId: userid,
+          rentalProductId: widget.rentDetails?['rentalProductId'],
+          rentalBookedDate: datetime.toString(),
+          rentalProductQuantity: _quantity.toString());
+      rentalBookedService rentService = rentalBookedService();
+      rentService.createRentalBooked(rentmap);
+      Fluttertoast.showToast(
+        msg: "Product Booked Succesfully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Booking Unsuccesfull",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 }

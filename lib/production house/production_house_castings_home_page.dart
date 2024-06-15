@@ -37,18 +37,29 @@ class _casting_home_pageState extends State<casting_home_page> {
                       child: CircularProgressIndicator(),
                     );
                   }
+                  if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No Data Found',
+                        style: GoogleFonts.fugazOne(color: Colors.white),
+                      ),
+                    );
+                  }
 
                   if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                     return ListView.builder(
                       itemBuilder: (context, index) {
                         final data = snapshot.data!.docs[index];
-                        return Padding( // <-- return Padding widget here
+                        return Padding(
+                          // <-- return Padding widget here
                           padding: const EdgeInsets.all(15),
                           child: GestureDetector(
                             onTap: () =>
                                 Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
-                                   user_casting_calls_clicked_page(image: data['poster'],),
+                                  user_casting_calls_clicked_page(
+                                image: data['poster'],whatsappNumber: data['whatsappNumber'],emailID: data['emailid'],instaID: data['instagramid'],
+                              ),
                             )),
                             child: Container(
                               decoration: BoxDecoration(

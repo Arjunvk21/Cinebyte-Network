@@ -205,6 +205,9 @@ class create_casting_calls extends StatefulWidget {
 
 class _create_casting_callsState extends State<create_casting_calls> {
   File? file;
+  final TextEditingController whatsappController = TextEditingController();
+  final TextEditingController instagramController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   Future<void> _pickImageFromGallery() async {
     try {
@@ -261,6 +264,9 @@ class _create_casting_callsState extends State<create_casting_calls> {
       String id = randomAlphaNumeric(10);
       Map<String, dynamic> castingUploadMap = {
         'castingId': id,
+        'whatsappNumber': whatsappController.text,
+        'instagramid': instagramController.text,
+        'emailid': emailController.text,
         'poster': downloadUrl
       };
 
@@ -297,80 +303,124 @@ class _create_casting_callsState extends State<create_casting_calls> {
 
     return Scaffold(
       appBar: const Custom_appbar_real(title: 'Create casting calls'),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                    Color.fromARGB(255, 229, 206, 177),
-                  ),
-                  minimumSize: MaterialStatePropertyAll(Size(200, 40)),
-                ),
-                onPressed: () async {
-                  await uploadCastingDetails();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const casting_home_page(),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: ElevatedButton(
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                      Color.fromARGB(255, 229, 206, 177),
                     ),
-                  );
-                },
-                child: Text(
-                  "Upload",
-                  style: GoogleFonts.fugazOne(
-                    color: const Color.fromARGB(255, 46, 53, 62),
-                    fontSize: 14,
+                    minimumSize: MaterialStatePropertyAll(Size(200, 40)),
+                  ),
+                  onPressed: () async {
+                    await uploadCastingDetails();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const casting_home_page(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Upload",
+                    style: GoogleFonts.fugazOne(
+                      color: const Color.fromARGB(255, 46, 53, 62),
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: width,
-              height: 300,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 229, 206, 177),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: Icon(
-                      Icons.cloud_upload,
-                      color: Color.fromARGB(255, 46, 53, 62),
-                      size: 120,
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      await _pickImageFromGallery();
-                      if (file != null) {
-                        Fluttertoast.showToast(
-                          msg: "File selected: ${file!.path}",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-                      }
-                    },
-                    child: Text(
-                      'Upload a file',
-                      style: GoogleFonts.fugazOne(
-                        color: const Color(0xff2D3037),
+              const SizedBox(height: 20),
+              Container(
+                width: width,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 229, 206, 177),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        width: 200,
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (value!.isEmpty || value.length != 10) {
+                              return 'Enter a valid phone number';
+                            }
+                          },
+                          controller: whatsappController,
+                          decoration:
+                              InputDecoration(hintText: 'Whatsapp Number'),
+                        )),
+                    SizedBox(
+                        width: 200,
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: instagramController,
+                          decoration: InputDecoration(hintText: 'Instagram ID'),
+                        )),
+                    SizedBox(
+                        width: 200,
+                        child: TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            String? _validateemail(value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter an email';
+                              }
+                              RegExp emailRegExp = RegExp(
+                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                              if (!emailRegExp.hasMatch(value)) {
+                                return 'Please enter a valid Email';
+                              }
+                              return null;
+                            }
+                          },
+                          controller: emailController,
+                          decoration: InputDecoration(hintText: 'Email ID'),
+                        )),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 30),
+                      child: Icon(
+                        Icons.cloud_upload,
+                        color: Color.fromARGB(255, 46, 53, 62),
+                        size: 120,
                       ),
                     ),
-                  ),
-                ],
+                    OutlinedButton(
+                      onPressed: () async {
+                        await _pickImageFromGallery();
+                        if (file != null) {
+                          Fluttertoast.showToast(
+                            msg: "File selected: ${file!.path}",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        }
+                      },
+                      child: Text(
+                        'Upload a file',
+                        style: GoogleFonts.fugazOne(
+                          color: const Color(0xff2D3037),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:cinebyte_network_application/firebase/meetingservice.dart';
 import 'package:cinebyte_network_application/model/meetingsmodel.dart';
 import 'package:cinebyte_network_application/production%20house/meeting_scheduled.dart';
 import 'package:cinebyte_network_application/production%20house/production_house_scripts_page.dart';
+import 'package:cinebyte_network_application/user/bottomnav.dart';
 import 'package:cinebyte_network_application/user/user_menu_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -312,7 +313,8 @@ class _create_schedules_pageState extends State<create_schedules_page> {
           availableTime2: availableTime2,
           availableTime3: availableTime3,
           meetingType: _selectedMeetingType,
-          meetingStatus: 'Pending');
+          meetingStatus: 'Pending',
+          confirmedDate: '');
       MeetingService meetingService = MeetingService();
       meetingService.createmeetings(meeting);
 
@@ -326,7 +328,7 @@ class _create_schedules_pageState extends State<create_schedules_page> {
         fontSize: 16.0,
       );
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => user_page_menu_page(),
+        builder: (context) => const custombottomnavigationbar(),
       ));
     } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(

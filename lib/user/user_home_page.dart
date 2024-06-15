@@ -6,6 +6,7 @@ import 'package:cinebyte_network_application/production%20house/production_house
 import 'package:cinebyte_network_application/production%20house/production_house_user_profile.dart';
 import 'package:cinebyte_network_application/production%20house/sign_in.dart';
 import 'package:cinebyte_network_application/user/gallery_page.dart';
+import 'package:cinebyte_network_application/user/map_page.dart';
 import 'package:cinebyte_network_application/user/notifications_page.dart';
 import 'package:cinebyte_network_application/user/skill_upload_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,7 +48,10 @@ class user_home_pageState extends State<user_home_page> {
           Padding(
             padding: const EdgeInsets.only(right: 20, top: 15),
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => map_page())));
+                },
                 icon: const Icon(Icons.add_location_alt_sharp)),
           ),
           Padding(

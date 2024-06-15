@@ -1,5 +1,4 @@
-import 'package:cinebyte_network_application/firebase/approved_schedules_service.dart';
-import 'package:cinebyte_network_application/model/approved_schedules_model.dart';
+import 'package:cinebyte_network_application/user/bottomnav.dart';
 import 'package:cinebyte_network_application/user/user_date_negotiate_page.dart';
 import 'package:cinebyte_network_application/user/user_meeting_pick_date_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
@@ -34,7 +33,8 @@ class _user_scripts_approve_or_datenegotiate_pageState
   // DateTime? availableDates3;
   // TimeOfDay? availableTime3;
   List<Map<String, dynamic>> meetingDatesTimes = [];
-  Map<String, dynamic>? selectedDatetime;
+  String? selectedDatetime;
+  final List listitems = ['aaa', 'bbbb', 'vvvvv'];
 
   @override
   void initState() {
@@ -81,6 +81,8 @@ class _user_scripts_approve_or_datenegotiate_pageState
     }
   }
 
+  List<String> meetingDates = [];
+
   void extractMeetingDates(DocumentSnapshot meetingDetails) {
     if (meetingDetails.exists) {
       try {
@@ -93,41 +95,14 @@ class _user_scripts_approve_or_datenegotiate_pageState
             data.containsKey('availableDates2') &&
             data['availableDates2'] is String &&
             data.containsKey('availableDates3') &&
-            data['availableDates3'] is String &&
-            data.containsKey('availableTime1') &&
-            data['availableTime1'] is String &&
-            data.containsKey('availableTime2') &&
-            data['availableTime2'] is String &&
-            data.containsKey('availableTime3') &&
-            data['availableTime3'] is String) {
+            data['availableDates3'] is String) {
           // Extract the fields
           String date1 = data['availableDates1'];
           String date2 = data['availableDates2'];
           String date3 = data['availableDates3'];
-          String time1 = data['availableTime1'];
-          String time2 = data['availableTime2'];
-          String time3 = data['availableTime3'];
 
-          // Convert time strings to TimeOfDay
-          // TimeOfDay parseTime(String time) {
-          //   final format = DateFormat.jm(); // or any other date format
-          //   return TimeOfDay.fromDateTime(format.parse(time));
-          // }
-
-          meetingDatesTimes = [
-            {
-              'date': date1,
-              'time': time1,
-            },
-            {
-              'date': date2,
-              'time': time2,
-            },
-            {
-              'date': date3,
-              'time': time3,
-            },
-          ];
+          // Populate the meetingDates list
+          meetingDates = [date1, date2, date3];
         } else {
           throw Exception("Invalid field types in meetingDetails");
         }
@@ -143,9 +118,9 @@ class _user_scripts_approve_or_datenegotiate_pageState
     double width = MediaQuery.of(context).size.width * 0.9;
     double height = MediaQuery.of(context).size.height * 0.8;
     return Scaffold(
-      appBar: Custom_appbar_real(title: 'Scripts/Synopsys'),
+      appBar: const Custom_appbar_real(title: 'Scripts/Synopsys'),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : senderDetails == null
               ? Center(
                   child: Text(
@@ -160,10 +135,10 @@ class _user_scripts_approve_or_datenegotiate_pageState
                     children: [
                       Center(
                         child: Container(
-                          margin: EdgeInsets.only(top: 40),
+                          margin: const EdgeInsets.only(top: 40),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Color.fromARGB(255, 234, 210, 178),
+                            color: const Color.fromARGB(255, 234, 210, 178),
                           ),
                           width: width,
                           height: height,
@@ -183,20 +158,19 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                 child: Text(
                                   senderDetails!['name'] ?? 'Unknown Name',
                                   style: GoogleFonts.acme(
-                                    color: Color(0xff2D3037),
+                                    color: const Color(0xff2D3037),
                                     fontSize: 20,
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 90, right: 90),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 90, right: 90),
                                 child: Divider(
                                   thickness: 1,
                                   color: Color(0xff36393F),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Padding(
@@ -204,14 +178,13 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                 child: Text(
                                   widget.script?['scriptName'],
                                   style: GoogleFonts.acme(
-                                    color: Color(0xff2D3037),
+                                    color: const Color(0xff2D3037),
                                     fontSize: 20,
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 90, right: 90),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 90, right: 90),
                                 child: Divider(
                                   thickness: 1,
                                   color: Color(0xff36393F),
@@ -225,48 +198,78 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                       widget.meetingDetails?[
                                           'meetingDescription'],
                                       style: GoogleFonts.lateef(
-                                        color: Color(0xff2D3037),
+                                        color: const Color(0xff2D3037),
                                         fontSize: 20,
                                       ),
                                     ),
                                     Text(
-                                      'How we meet : ${widget.meetingDetails?['meetingType']}',
+                                      'Meeting Type : ${widget.meetingDetails?['meetingType']}',
                                       style: GoogleFonts.lateef(
-                                        color: Color(0xff2D3037),
+                                        color: const Color(0xff2D3037),
                                         fontSize: 20,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              // pickdate
                               Padding(
                                 padding: const EdgeInsets.all(60),
-                                child: DropdownButton(
+                                child: DropdownButtonFormField(
                                   isExpanded: true,
-                                  icon: Icon(
+                                  icon: const Icon(
                                       Icons.arrow_drop_down_circle_outlined),
                                   hint: Text(
                                     'Pick a date',
                                     style: GoogleFonts.fugazOne(
-                                        color: Color.fromARGB(255, 70, 75, 86),
-                                        fontSize: 20),
+                                      color:
+                                          const Color.fromARGB(255, 70, 75, 86),
+                                      fontSize: 20,
+                                    ),
                                   ),
                                   value: selectedDatetime,
-                                  onChanged: (newvalue) {
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      selectedDatetime =
-                                          newvalue;
+                                      selectedDatetime = newValue as String?;
                                     });
                                   },
-                                  items: meetingDatesTimes.map((valueitem) {
+                                  items: meetingDates.map((date) {
                                     return DropdownMenuItem(
-                                      value: valueitem,
-                                      child: Text(valueitem['date']),
+                                      value: date,
+                                      child: Text(date),
                                     );
                                   }).toList(),
                                 ),
                               ),
+
+                              // pickdate
+                              // Padding(
+                              //   padding: const EdgeInsets.all(60),
+                              //   child: DropdownButtonFormField(
+                              //     isExpanded: true,
+                              //     icon: const Icon(
+                              //         Icons.arrow_drop_down_circle_outlined),
+                              //     hint: Text(
+                              //       'Pick a date',
+                              //       style: GoogleFonts.fugazOne(
+                              //           color: const Color.fromARGB(
+                              //               255, 70, 75, 86),
+                              //           fontSize: 20),
+                              //     ),
+                              //     value: selectedDatetime,
+                              //     onChanged: (newvalue) {
+                              //       setState(() {
+                              //         selectedDatetime =
+                              //             newvalue as Map<String, dynamic>?;
+                              //       });
+                              //     },
+                              //     items: listitems.map((valueitem) {
+                              //       return DropdownMenuItem(
+                              //         value: valueitem,
+                              //         child: Text(valueitem),
+                              //       );
+                              //     }).toList(),
+                              //   ),
+                              // ),
                               //pickdate
                               Padding(
                                 padding: const EdgeInsets.only(),
@@ -278,7 +281,7 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                     clipBehavior: Clip.hardEdge,
                                     borderRadius: BorderRadius.circular(20),
                                     child: ElevatedButton(
-                                        style: ButtonStyle(
+                                        style: const ButtonStyle(
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
                                                     Color(0xff2D3037)),
@@ -287,22 +290,47 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                               Size(200, 50),
                                             )),
                                         onPressed: () {
-                                          if (_meetapprovekey.currentState!
-                                              .validate()) {
-                                            FirebaseFirestore.instance
-                                                .collection("meetings")
-                                                .doc(widget.meetingDetails![
-                                                    "meetingId"])
-                                                .update({
-                                              "meetingStatus": "Accepted"
-                                            });
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        user_date_pick_page(
-                                                          pickdate:
-                                                              meetingDatesTimes,
-                                                        )));
+                                          try {
+                                            if (_meetapprovekey.currentState!
+                                                .validate()) {
+                                              FirebaseFirestore.instance
+                                                  .collection("meetings")
+                                                  .doc(widget.meetingDetails![
+                                                      "meetingId"])
+                                                  .update({
+                                                "meetingStatus": "Accepted",
+                                                "confirmedDate":
+                                                    selectedDatetime
+                                              });
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          custombottomnavigationbar()))
+                                                  .then((value) =>
+                                                      Fluttertoast.showToast(
+                                                        msg:
+                                                            "Meeting Scheduled",
+                                                        toastLength:
+                                                            Toast.LENGTH_SHORT,
+                                                        gravity:
+                                                            ToastGravity.CENTER,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                        textColor: Colors.white,
+                                                        fontSize: 16.0,
+                                                      ));
+                                            }
+                                          } on FirebaseAuthException {
+                                            Fluttertoast.showToast(
+                                              msg: "Something went wrong",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.CENTER,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.red,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0,
+                                            );
                                           }
                                         },
                                         child: Text(
@@ -323,7 +351,7 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(20),
                                     child: ElevatedButton(
-                                        style: ButtonStyle(
+                                        style: const ButtonStyle(
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
                                                     Color(0xff2D3037)),
@@ -332,19 +360,46 @@ class _user_scripts_approve_or_datenegotiate_pageState
                                               Size(200, 50),
                                             )),
                                         onPressed: () async {
-                                          FirebaseFirestore.instance
-                                              .collection("meetings")
-                                              .doc(widget
-                                                  .meetingDetails!["meetingId"])
-                                              .update(
-                                                  {"meetingStatus": "Reject"});
-                                          await FirebaseFirestore.instance
-                                              .collection("meetings")
-                                              .doc(widget
-                                                  .meetingDetails!["meetingId"])
-                                              .delete()
-                                              .then((value) =>
-                                                  Navigator.of(context).pop());
+                                          try {
+                                            FirebaseFirestore.instance
+                                                .collection("meetings")
+                                                .doc(widget.meetingDetails![
+                                                    "meetingId"])
+                                                .update({
+                                              "meetingStatus": "Reject"
+                                            });
+                                            await FirebaseFirestore.instance
+                                                .collection("meetings")
+                                                .doc(widget.meetingDetails![
+                                                    "meetingId"])
+                                                .delete()
+                                                .then((value) {
+                                              Fluttertoast.showToast(
+                                                msg: "Meeting Rejected",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0,
+                                              );
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    custombottomnavigationbar(),
+                                              ));
+                                            });
+                                          } on FirebaseAuthException {
+                                            Fluttertoast.showToast(
+                                              msg: "Something went wrong",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.CENTER,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.red,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0,
+                                            );
+                                          }
                                         },
                                         child: Text(
                                           "Reject",
@@ -364,39 +419,4 @@ class _user_scripts_approve_or_datenegotiate_pageState
                 ),
     );
   }
-
-  // scheduleScript() async {
-  //   try {
-  //     ScheduledScriptModel _sheduledScript = ScheduledScriptModel(
-  //         ScheduledScriptId: widget.meetingDetails!['meetingId'],
-  //         SenderId: widget.meetingDetails!['senderUserId'],
-  //         RecieverId: widget.meetingDetails!['receiverUserId'],
-  //         ScriptName: widget.meetingDetails!['scriptName'],
-  //         SelectedDateAndTime: selectedDatetime,
-  //         MeetingType: widget.meetingDetails!['meetingType']);
-  //     Approved_Schedules_Service approved_schedules_service =
-  //         Approved_Schedules_Service();
-  //     await approved_schedules_service
-  //         .createscheduledscriptcollection(_sheduledScript);
-  //     Fluttertoast.showToast(
-  //       msg: "Script Scheduled",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.CENTER,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.green,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //     );
-  //   } on FirebaseAuthException catch (e) {
-  //     Fluttertoast.showToast(
-  //       msg: "Script Scheduling Failed",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.CENTER,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.red,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //     );
-  //   }
-  // }
 }

@@ -1,163 +1,230 @@
+import 'package:cinebyte_network_application/firebase/databasemethods.dart';
+import 'package:cinebyte_network_application/firebase/rentalBookedService.dart';
+import 'package:cinebyte_network_application/firebase/rentalService.dart';
 import 'package:cinebyte_network_application/production%20house/rental_servies_detail_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: camel_case_types
-class rental_services_home_page extends StatelessWidget {
+class rental_services_home_page extends StatefulWidget {
   const rental_services_home_page({super.key});
+
+  @override
+  State<rental_services_home_page> createState() =>
+      _rental_services_home_pageState();
+}
+
+class _rental_services_home_pageState extends State<rental_services_home_page> {
+  rentalService _service = rentalService();
+  Stream? rentalstream;
+  rentalBookedService _bookedService = rentalBookedService();
+
+  getOnTheLoad() async {
+    Stream RentalStream = await DatabaseMethods().getrentaldetails();
+    rentalstream = RentalStream;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getOnTheLoad();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width * 0.8;
 
     return DefaultTabController(
-      length: 5,
+      length: 2,
       child: Scaffold(
         appBar: const Custom_appbar_real(title: 'Rental services'),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(30),
-              child: TextFormField(
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search, color: Colors.white),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    hintText: 'Search',
-                    hintStyle: GoogleFonts.fugazOne(color: Colors.white),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(),
-                    )),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: TabBar(
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        dividerColor: const Color.fromARGB(0, 255, 255, 255),
-                        indicator: const BoxDecoration(
-                          color: Color.fromARGB(255, 234, 210, 178),
-                        ),
-                        labelColor: const Color(0xff2D3037),
-                        unselectedLabelColor:
-                            const Color.fromARGB(255, 195, 192, 192),
-                        tabs: [
-                          Tab(
-                            icon: Image.asset('images/cam.png'),
-                          ),
-                          Tab(
-                            icon: Image.asset('images/mic.png'),
-                          ),
-                          Tab(
-                            icon: Image.asset('images/lights.png'),
-                          ),
-                          Tab(
-                            icon: Image.asset('images/editing softwres.png'),
-                          ),
-                          Tab(
-                            icon: Image.asset('images/green.png'),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(
               height: 30,
             ),
+            const TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: Color.fromARGB(0, 255, 255, 255),
+                indicator: BoxDecoration(
+                    color: Color.fromARGB(255, 234, 210, 178),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                labelColor: Color(0xff2D3037),
+                unselectedLabelColor: Color.fromARGB(255, 195, 192, 192),
+                tabs: [
+                  App_custom_tabbar(title: 'Book Product'),
+                  App_custom_tabbar(title: "Booked Products"),
+                ]),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            const rental_services_detail_page(),
-                      )),
-                      child: Container(
-                        // ignore: sort_child_properties_last
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 10, left: 10),
-                                  child: Text(
-                                    '17000/Day',
-                                    style: GoogleFonts.fugazOne(
-                                      color:
-                                          const Color.fromARGB(255, 46, 53, 62),
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                                // const SizedBox(
-                                //   width: 245,
-                                // ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.favorite,
-                                      color: Colors.red[600],
-                                    ))
-                              ],
-                            ),
-                            Image.asset(
-                              'images/cam.png',
-                              scale: 2,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Center(
-                                  child: Text(
-                                    'Sony Alpha 7',
-                                    style: GoogleFonts.fugazOne(
-                                      color:
-                                          const Color.fromARGB(255, 46, 53, 62),
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.shopping_cart))
-                              ],
-                            ),
-                          ],
-                        ),
-                        width: width,
-                        height: 200,
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 229, 206, 177),
-                            borderRadius: BorderRadius.circular(20)),
+              child: TabBarView(children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(30),
+                      child: TextFormField(
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                            prefixIcon:
+                                const Icon(Icons.search, color: Colors.white),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            hintText: 'Search',
+                            hintStyle:
+                                GoogleFonts.fugazOne(color: Colors.white),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(),
+                            )),
                       ),
                     ),
-                  );
-                },
-                itemCount: 18,
-              ),
-            ),
+                    Expanded(
+                      child: StreamBuilder(
+                          stream: _service.getAllRentalDetails(),
+                          builder: (context, snapshot) {
+                            return ListView.builder(
+                              itemBuilder: (context, index) {
+                                final ds = snapshot.data!.docs[index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          rental_services_detail_page(
+                                        rentDetails: ds,
+                                      ),
+                                    )),
+                                    child: Container(
+                                      width: width,
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 229, 206, 177),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            ds['productratePerDay'],
+                                            style: GoogleFonts.fugazOne(
+                                              color: const Color.fromARGB(
+                                                  255, 46, 53, 62),
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          Image.network(
+                                            ds['productImage'],
+                                            scale: 1,
+                                          ),
+                                          Text(
+                                            ds['productName'],
+                                            style: GoogleFonts.fugazOne(
+                                              color: const Color.fromARGB(
+                                                  255, 46, 53, 62),
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds['productDecription'],
+                                            style: GoogleFonts.fugazOne(
+                                              color: const Color.fromARGB(
+                                                  255, 46, 53, 62),
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: snapshot.data!.docs.length,
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Expanded(
+                      child: StreamBuilder(
+                          stream: _bookedService.getAllRentalBookedDetails(),
+                          builder: (context, snapshot) {
+                            return ListView.builder(
+                              itemBuilder: (context, index) {
+                                final ds = snapshot.data!.docs[index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          rental_services_detail_page(
+                                        rentDetails: ds,
+                                      ),
+                                    )),
+                                    child: Container(
+                                      width: width,
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 229, 206, 177),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            'ds[' ']',
+                                            style: GoogleFonts.fugazOne(
+                                              color: const Color.fromARGB(
+                                                  255, 46, 53, 62),
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          Image.network(
+                                            '',
+                                            scale: 1,
+                                          ),
+                                          Text(
+                                            '',
+                                            style: GoogleFonts.fugazOne(
+                                              color: const Color.fromARGB(
+                                                  255, 46, 53, 62),
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          Text(
+                                            '',
+                                            style: GoogleFonts.fugazOne(
+                                              color: const Color.fromARGB(
+                                                  255, 46, 53, 62),
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: snapshot.data!.docs.length,
+                            );
+                          }),
+                    ),
+                  ],
+                )
+              ]),
+            )
           ],
         ),
       ),

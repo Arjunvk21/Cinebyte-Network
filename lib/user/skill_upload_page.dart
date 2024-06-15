@@ -39,7 +39,7 @@ class _skill_uploadState extends State<skill_upload> {
       Users.doc(id).update(data);
     }
 
-    ;
+    
 
     double width = MediaQuery.of(context).size.width * 0.97;
     double height = MediaQuery.of(context).size.height * 0.5;

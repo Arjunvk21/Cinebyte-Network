@@ -15,6 +15,7 @@ class meetingModel {
   TimeOfDay? availableTime3;
   String? meetingType;
   String? meetingStatus;
+  String? confirmedDate;
 
   meetingModel({
     this.scriptName,
@@ -29,6 +30,7 @@ class meetingModel {
     this.availableDates3,
     this.availableTime3,
     this.meetingType,
+    this.confirmedDate,
     required this.meetingStatus,
   });
 
@@ -40,6 +42,7 @@ class meetingModel {
         receiverUserId: data['receiverUserId'],
         meetingDescription: data['meetingDescription'],
         availableDates1: data['availableDates1'],
+        confirmedDate: data['confirmedDate'],
         availableTime1: TimeOfDay(
           hour: data['availableTime1']['hour'],
           minute: data['availableTime1']['minute'],
@@ -79,6 +82,7 @@ class meetingModel {
           : null,
       'meetingType': meetingType,
       'meetingStatus': meetingStatus,
+      'confirmedDate': confirmedDate
     };
   }
 }

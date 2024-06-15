@@ -189,12 +189,12 @@ class _UploadPostPageState extends State<UploadPostPage> {
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => {});
       String fileUrl = await taskSnapshot.ref.getDownloadURL();
       galleryModel _gallerymodel = galleryModel(
-          postid: postId,
-          postname: postnamecontroller.text,
-          postdescription: postdescriptioncontroller.text,
-          postdata: fileUrl,
-          userid: userid,
-          );
+        postid: postId,
+        postname: postnamecontroller.text,
+        postdescription: postdescriptioncontroller.text,
+        postdata: fileUrl,
+        userid: userid,
+      );
       galleryService _galleryservice = galleryService();
       await _galleryservice.createpost(_gallerymodel);
       setState(() {

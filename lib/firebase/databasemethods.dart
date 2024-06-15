@@ -9,4 +9,8 @@ class DatabaseMethods {
   Future<Stream<QuerySnapshot>> getscriptdetails() async {
     return await FirebaseFirestore.instance.collection('Scripts').snapshots();
   }
+  Future<Stream<QuerySnapshot>> getrentaldetails() async {
+    return await FirebaseFirestore.instance.collection('rentals').snapshots();
+  }
+  
 }

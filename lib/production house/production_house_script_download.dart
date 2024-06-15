@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:cinebyte_network_application/production%20house/create_schedules_page.dart';
 import 'package:cinebyte_network_application/util/appcustomattributes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
 
 class production_house_script_download_page extends StatefulWidget {
   DocumentSnapshot scripts;
@@ -19,6 +21,9 @@ class production_house_script_download_page extends StatefulWidget {
 
 class _production_house_script_download_pageState
     extends State<production_house_script_download_page> {
+  // Reference storage =
+  //     FirebaseStorage.instance.ref().child('scriptsfiles').getData()
+
   String? localFilePath;
   @override
   @override
@@ -27,18 +32,19 @@ class _production_house_script_download_pageState
     double height = MediaQuery.of(context).size.height * 0.8;
     return Scaffold(
       appBar: const Custom_appbar_real(title: 'Scripts/Synopsys'),
-      body: Center(child:Text('data') ),
+      body: const Center(child: Text('data'),),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FloatingActionButton(
             onPressed: () {
+              log('--------------------------${widget.scripts['scriptfile']}---------------------------');
               Navigator.of(context).pop();
             },
             backgroundColor: const Color.fromARGB(255, 234, 210, 178),
             child: const Icon(Icons.close),
           ),
-          SizedBox(
+          const SizedBox(
             width: 50,
           ),
           FloatingActionButton(
